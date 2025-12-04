@@ -1,0 +1,11 @@
+{
+  "label": "Module 1: The Robotic Nervous System (ROS 2)",
+  "position": 1,
+  "collapsible": true,
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "module-01-robotic-nervous-system/index"
+  },
+  "description": "Learn robot system architecture and communication using ROS 2"
+}
