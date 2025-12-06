@@ -1,0 +1,33 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="robotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#303F9F;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00ACC1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f5f7fa"/>
+
+  <!-- Robot Body -->
+  <rect x="300" y="200" width="200" height="250" rx="20" fill="url(#robotGradient)" opacity="0.9"/>
+
+  <!-- Robot Head -->
+  <rect x="325" y="140" width="150" height="120" rx="15" fill="url(#robotGradient)"/>
+
+  <!-- Eyes -->
+  <circle cx="370" cy="180" r="15" fill="#00ACC1"/>
+  <circle cx="430" cy="180" r="15" fill="#00ACC1"/>
+
+  <!-- Antenna -->
+  <line x1="400" y1="140" x2="400" y2="100" stroke="#303F9F" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="400" cy="95" r="10" fill="#00ACC1"/>
+
+  <!-- Arms -->
+  <rect x="250" y="250" width="50" height="150" rx="10" fill="url(#robotGradient)" opacity="0.8"/>
+  <rect x="500" y="250" width="50" height="150" rx="10" fill="url(#robotGradient)" opacity="0.8"/>
+
+  <!-- Label -->
+  <text x="400" y="500" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#303F9F" text-anchor="middle">Physical AI</text>
+  <text x="400" y="535" font-family="Arial, sans-serif" font-size="20" fill="#00ACC1" text-anchor="middle">Humanoid Robotics</text>
+</svg>

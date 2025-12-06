@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://book-project/schemas/chapter-frontmatter.json",
+  "title": "Chapter Frontmatter Schema",
+  "description": "Schema for YAML frontmatter in chapter markdown files",
+  "type": "object",
+  "required": ["title", "sidebar_label", "sidebar_position", "description"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Full chapter title for page header and SEO",
+      "minLength": 5,
+      "maxLength": 60,
+      "examples": [
+        "What is ROS 2?",
+        "Forward and Inverse Kinematics"
+      ]
+    },
+    "sidebar_label": {
+      "type": "string",
+      "description": "Shortened title for sidebar navigation",
+      "minLength": 3,
+      "maxLength": 30,
+      "examples": [
+        "What is ROS 2?",
+        "Kinematics"
+      ]
+    },
+    "sidebar_position": {
+      "type": "integer",
+      "description": "Chapter position within module (1-8)",
+      "minimum": 1,
+      "maximum": 8
+    },
+    "description": {
+      "type": "string",
+      "description": "One-sentence chapter summary for meta description and search",
+      "minLength": 20,
+      "maxLength": 160,
+      "examples": [
+        "Introduction to the Robot Operating System 2 middleware",
+        "Learn forward and inverse kinematics for robot control"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "description": "Categorization tags for filtering and search",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$"
+      },
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "examples": [
+        ["ros2", "robotics", "middleware"],
+        ["kinematics", "control", "mathematics"]
+      ]
+    },
+    "keywords": {
+      "type": "array",
+      "description": "SEO keywords for search engine optimization",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "examples": [
+        ["ROS 2", "robot operating system", "nodes", "topics"],
+        ["forward kinematics", "inverse kinematics", "Denavit-Hartenberg"]
+      ]
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["beginner", "intermediate", "advanced"],
+      "description": "Technical difficulty level"
+    },
+    "estimated_time": {
+      "type": "string",
+      "description": "Estimated reading and practice time",
+      "pattern": "^\\d+-\\d+ (minutes|hours)$",
+      "examples": [
+        "30-45 minutes",
+        "1-2 hours"
+      ]
+    },
+    "prerequisites": {
+      "type": "array",
+      "description": "Required prior knowledge or chapters",
+      "items": {
+        "type": "string"
+      },
+      "examples": [
+        ["Basic Python programming", "Understanding of coordinate systems"],
+        ["Chapter 1: What is ROS 2?"]
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "title": "What is ROS 2?",
+      "sidebar_label": "What is ROS 2?",
+      "sidebar_position": 1,
+      "description": "Introduction to the Robot Operating System 2 middleware for robot communication",
+      "tags": ["ros2", "robotics", "middleware", "architecture"],
+      "keywords": ["ROS 2", "robot operating system", "nodes", "topics", "robotics middleware"],
+      "difficulty": "beginner",
+      "estimated_time": "30-45 minutes",
+      "prerequisites": ["Basic Python programming"]
+    },
+    {
+      "title": "Forward and Inverse Kinematics",
+      "sidebar_label": "Kinematics",
+      "sidebar_position": 1,
+      "description": "Calculate joint angles and end-effector positions for robot arms",
+      "tags": ["kinematics", "control", "mathematics", "robotics"],
+      "keywords": ["forward kinematics", "inverse kinematics", "Denavit-Hartenberg", "joint angles"],
+      "difficulty": "intermediate",
+      "estimated_time": "1-2 hours",
+      "prerequisites": ["Linear algebra basics", "Chapter 1: Introduction to Motion Control"]
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://book-project/schemas/module-metadata.json",
+  "title": "Module Metadata Schema",
+  "description": "Schema for _category_.json files in module directories",
+  "type": "object",
+  "required": ["label", "position", "collapsible", "collapsed", "link", "description"],
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Full module title displayed in sidebar",
+      "pattern": "^Module [1-4]: .+$",
+      "minLength": 10,
+      "maxLength": 60,
+      "examples": [
+        "Module 1: The Robotic Nervous System (ROS 2)",
+        "Module 2: Robot Perception and Sensors"
+      ]
+    },
+    "position": {
+      "type": "integer",
+      "description": "Sidebar position (1-4 for modules, 5 for appendix)",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "collapsible": {
+      "type": "boolean",
+      "description": "Whether the module can be collapsed in sidebar",
+      "default": true
+    },
+    "collapsed": {
+      "type": "boolean",
+      "description": "Initial collapsed state",
+      "default": false
+    },
+    "link": {
+      "type": "object",
+      "description": "Link to module index page",
+      "required": ["type", "id"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["doc"],
+          "description": "Link type (always 'doc' for Docusaurus)"
+        },
+        "id": {
+          "type": "string",
+          "description": "Document ID for module index page",
+          "pattern": "^module-\\d{2}-[a-z0-9-]+/index$",
+          "examples": [
+            "module-01-robotic-nervous-system/index",
+            "module-02-robot-perception/index"
+          ]
+        }
+      }
+    },
+    "description": {
+      "type": "string",
+      "description": "One-sentence module description for metadata",
+      "minLength": 20,
+      "maxLength": 200,
+      "examples": [
+        "Learn robot system architecture and communication using ROS 2",
+        "Understand how robots sense and interpret the physical world"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "label": "Module 1: The Robotic Nervous System (ROS 2)",
+      "position": 1,
+      "collapsible": true,
+      "collapsed": false,
+      "link": {
+        "type": "doc",
+        "id": "module-01-robotic-nervous-system/index"
+      },
+      "description": "Learn robot system architecture and communication using ROS 2"
+    },
+    {
+      "label": "Module 2: Robot Perception and Sensors",
+      "position": 2,
+      "collapsible": true,
+      "collapsed": false,
+      "link": {
+        "type": "doc",
+        "id": "module-02-robot-perception/index"
+      },
+      "description": "Understand how robots sense and interpret the physical world"
+    }
+  ]
+}

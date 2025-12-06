@@ -1,0 +1,57 @@
+:root {
+  /* Robotics/AI Theme - Indigo Primary */
+  --ifm-color-primary: #303F9F;
+  --ifm-color-primary-dark: #1E3A8A;
+  --ifm-color-primary-darker: #1A2F6E;
+  --ifm-color-primary-darkest: #162552;
+  --ifm-color-primary-light: #5C6BC0;
+  --ifm-color-primary-lighter: #7986CB;
+  --ifm-color-primary-lightest: #9FA8DA;
+
+  /* Secondary - Cyan Accent */
+  --ifm-color-secondary: #00ACC1;
+
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-font-size-base: 16px;
+  --ifm-line-height-base: 1.75;
+}
+
+[data-theme='dark'] {
+  /* Dark Mode - Lighter Indigo for Contrast */
+  --ifm-color-primary: #5C6BC0;
+  --ifm-color-primary-dark: #3F51B5;
+  --ifm-color-primary-darker: #303F9F;
+  --ifm-color-primary-darkest: #1E3A8A;
+  --ifm-color-primary-light: #7986CB;
+  --ifm-color-primary-lighter: #9FA8DA;
+  --ifm-color-primary-lightest: #C5CAE9;
+
+  --ifm-background-color: #121212;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Focus Indicators for Keyboard Accessibility */
+*:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 4px;
+}
+
+.markdown {
+  max-width: 720px;
+}
+
+.markdown h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.markdown h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}

@@ -1,0 +1,10 @@
+{
+  "label": "Appendix",
+  "position": 5,
+  "collapsible": true,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Additional resources, glossary, and setup guides for Physical AI & Humanoid Robotics"
+  }
+}

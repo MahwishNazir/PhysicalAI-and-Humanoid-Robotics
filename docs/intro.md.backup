@@ -1,0 +1,49 @@
+---
+id: intro
+title: Introduction
+sidebar_label: Introduction
+sidebar_position: 0
+slug: /
+---
+
+# Welcome to Humanoid Robotics with ROS 2
+
+This book is a comprehensive guide that will take you from ROS 2 fundamentals to building and integrating complete humanoid robotic systems. Whether you're a beginner or looking to deepen your robotics knowledge, you'll find practical, hands-on content throughout.
+
+## What You'll Learn
+
+This book covers humanoid robotics through **4 comprehensive modules**:
+
+- **Module 1: Robotic Nervous System** - Master ROS 2 fundamentals including nodes, topics, services, and actions
+- **Module 2: Robot Perception** - Learn sensor integration, computer vision, and environment understanding
+- **Module 3: Motion Control** - Understand kinematics, dynamics, and control systems for humanoid movement
+- **Module 4: Humanoid Integration** - Build complete systems integrating perception, planning, and control
+
+Each module includes working code examples, hands-on exercises, and troubleshooting guidance to ensure you can apply concepts immediately.
+
+## How to Use This Book
+
+This book is organized into 4 modules with multiple chapters each:
+
+- **Module 1: Robotic Nervous System** - Start here to build your ROS 2 foundation
+- **Module 2: Robot Perception** - Add sensing and vision capabilities
+- **Module 3: Motion Control** - Master movement and manipulation
+- **Module 4: Humanoid Integration** - Bring everything together
+- **Appendix** - Quick reference materials and glossary
+
+Use the sidebar navigation to explore topics, or use the search function at the top right to find specific information quickly.
+
+## Prerequisites
+
+Before diving in, you should have:
+
+- Basic programming knowledge (Python or C++)
+- Familiarity with Linux/Ubuntu (basic terminal commands)
+- ROS 2 Humble installed (installation guides provided in Module 1)
+- A curious mind and willingness to experiment with real robots
+
+## Getting Started
+
+Ready to begin? Start with **Module 1: Robotic Nervous System**, where you'll learn what ROS 2 is, understand nodes and topics, and write your first robotic applications.
+
+Enjoy your robotics journey!

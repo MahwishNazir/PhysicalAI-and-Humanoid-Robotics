@@ -1,0 +1,121 @@
+.hero {
+  padding: var(--ifm-spacing-vertical) var(--ifm-spacing-horizontal);
+  background: linear-gradient(135deg, var(--ifm-color-primary-lightest) 0%, var(--ifm-background-color) 100%);
+}
+
+.heroContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  align-items: center;
+}
+
+.heroText {
+  text-align: center;
+  max-width: 600px;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: var(--ifm-color-primary);
+  line-height: 1.2;
+}
+
+.heroTagline {
+  font-size: 1.25rem;
+  color: var(--ifm-font-color-base);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.ctaButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.authButtons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.authMessage {
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--ifm-color-warning-lightest);
+  border: 1px solid var(--ifm-color-warning);
+  border-radius: 8px;
+  color: var(--ifm-color-emphasis-900);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.heroImageContainer {
+  max-width: 500px;
+  width: 100%;
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+/* Desktop: Side-by-side layout */
+@media (min-width: 996px) {
+  .heroContent {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .heroText {
+    text-align: left;
+    max-width: 50%;
+  }
+
+  .ctaButtons {
+    align-items: flex-start;
+  }
+
+  .heroTitle {
+    font-size: 3.5rem;
+  }
+}
+
+/* Mobile: Smaller text */
+@media (max-width: 576px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .heroTagline {
+    font-size: 1rem;
+  }
+
+  .ctaButtons button,
+  .ctaButtons a {
+    width: 100%;
+  }
+}

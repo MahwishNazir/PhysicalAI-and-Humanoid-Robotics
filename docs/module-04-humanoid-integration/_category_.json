@@ -1,0 +1,11 @@
+{
+  "label": "Module 4: Vision-Language-Action (VLA)",
+  "position": 4,
+  "collapsible": true,
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "module-04-humanoid-integration/index"
+  },
+  "description": "The convergence of LLMs and Robotics - from voice commands to autonomous actions"
+}

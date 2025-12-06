@@ -1,0 +1,11 @@
+{
+  "label": "Module 2: The Digital Twin (Gazebo & Unity)",
+  "position": 2,
+  "collapsible": true,
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "module-02-robot-perception/index"
+  },
+  "description": "Master physics simulation and environment building with Gazebo and Unity"
+}
