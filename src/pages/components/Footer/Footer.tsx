@@ -8,7 +8,7 @@ export default function Footer(): JSX.Element {
         <div className={styles.footerLinks}>
           {/* GitHub Repository Link */}
           <a
-            href="https://github.com/MahwishNazir/PhysicalAI--HumanoidRobotics-ai.git"
+            href="https://github.com/MahwishNazir/PhysicalAI-and-Humanoid-Robotics.git"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.footerLink}
