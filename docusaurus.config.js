@@ -9,11 +9,11 @@ const config = {
   tagline: 'A comprehensive guide',
   favicon: 'img/favicon.ico',
 
-  url: 'https://your-book-site.com',
-  baseUrl: '/',
+  url: 'https://mahwishnazir.github.io',
+  baseUrl: '/PhysicalAI--HumanoidRobotics-ai/',
 
-  organizationName: 'your-username',
-  projectName: 'your-book',
+  organizationName: 'MahwishNazir',
+  projectName: 'PhysicalAI--HumanoidRobotics-ai',
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -54,7 +54,7 @@ const config = {
       },
       footer: {
         style: 'dark',
-        copyright: `Copyright © ${new Date().getFullYear()} Your Name. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Mahwish Nazir. Built with Docusaurus.`,
       },
       prism: {
         theme: lightTheme,
