@@ -776,8 +776,6 @@ ros2 topic echo /hello
 - [ROS 2 Tutorials](https://docs.ros.org/en/humble/Tutorials.html)
 - [ROS 2 Design Philosophy](https://design.ros2.org/)
 
-**Code Solutions**: [Exercise solutions](./solutions/) - Reference implementations for all exercises
-
 **Community Resources**:
 - [ROS Discourse](https://discourse.ros.org/) - Ask questions and get help
 - [ROS Answers](https://answers.ros.org/) - Q&A platform
