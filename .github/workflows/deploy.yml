@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 006-landing-page
-      - master
+      - main
   workflow_dispatch:
 
 permissions:
