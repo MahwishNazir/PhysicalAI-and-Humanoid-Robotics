@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './Hero.module.css';
 
 export default function Hero(): JSX.Element {
@@ -59,7 +60,7 @@ export default function Hero(): JSX.Element {
         {/* Hero Image */}
         <div className={styles.heroImageContainer}>
           <img
-            src="/img/hero-robot.svg"
+            src={useBaseUrl('/img/hero-robot.svg')}
             alt="Futuristic humanoid robot illustration representing Physical AI"
             className={styles.heroImage}
             loading="lazy"
