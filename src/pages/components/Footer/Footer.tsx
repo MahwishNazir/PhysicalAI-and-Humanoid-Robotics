@@ -8,7 +8,7 @@ export default function Footer(): JSX.Element {
         <div className={styles.footerLinks}>
           {/* GitHub Repository Link */}
           <a
-            href="https://github.com/placeholder/physical-ai-robotics"
+            href="https://github.com/MahwishNazir/PhysicalAI--HumanoidRobotics-ai.git"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.footerLink}
@@ -22,9 +22,9 @@ export default function Footer(): JSX.Element {
 
           {/* Email Contact Link */}
           <a
-            href="mailto:contact@example.com"
+            href="mailto:mahwishnazir65@gmail.com"
             className={styles.footerLink}
-            aria-label="Send email to contact@example.com"
+            aria-label="Send email to mahwishnazir65@gmail.com"
           >
             <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true">
               <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
@@ -36,7 +36,7 @@ export default function Footer(): JSX.Element {
         {/* Copyright Notice */}
         <div className={styles.copyright}>
           <p>© {new Date().getFullYear()} Physical AI & Humanoid Robotics. All rights reserved.</p>
-          <p className={styles.author}>By Author Name</p>
+          <p className={styles.author}>By Mahwish Nazir</p>
         </div>
       </div>
     </footer>
