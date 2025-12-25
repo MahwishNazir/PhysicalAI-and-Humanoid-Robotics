@@ -1,0 +1,408 @@
+# Code Testing Workflow for Isaac Sim Examples
+
+All code examples in Module 3 must be tested in Isaac Sim 2023.1+ before publication.
+
+---
+
+## Prerequisites
+
+### Software Requirements
+
+- **Isaac Sim**: Version 2023.1.0 or later (Omniverse-based)
+- **Python**: 3.10+ (bundled with Isaac Sim)
+- **OS**: Ubuntu 20.04/22.04 or Windows 10/11
+- **GPU**: NVIDIA RTX series (RTX 2060 or better recommended)
+- **RAM**: 16GB minimum, 32GB recommended
+- **Disk Space**: 50GB+ free
+
+### Installation Verification
+
+Before testing code examples, verify Isaac Sim is properly installed:
+
+```bash
+# Linux: Check Isaac Sim Python
+~/.local/share/ov/pkg/isaac_sim-2023.1.0/python.sh --version
+
+# Windows: Check Isaac Sim Python
+"%USERPROFILE%\AppData\Local\ov\pkg\isaac_sim-2023.1.0\python.bat" --version
+```
+
+Expected output: Python 3.10.x
+
+---
+
+## Testing Workflow
+
+### Step 1: Create Test Script
+
+Save the code example to a `.py` file:
+
+```bash
+# Example structure
+mkdir -p test-scripts/module-03/chapter-01/
+cd test-scripts/module-03/chapter-01/
+nano example_01_hello_isaac.py
+```
+
+### Step 2: Run with Isaac Sim Python
+
+Execute using Isaac Sim's bundled Python interpreter:
+
+**Linux**:
+```bash
+~/.local/share/ov/pkg/isaac_sim-2023.1.0/python.sh example_01_hello_isaac.py
+```
+
+**Windows**:
+```cmd
+"%USERPROFILE%\AppData\Local\ov\pkg\isaac_sim-2023.1.0\python.bat" example_01_hello_isaac.py
+```
+
+### Step 3: Verify Expected Behavior
+
+For each code example, verify:
+
+1. **✅ Script starts without errors**
+   - No import errors
+   - No syntax errors
+   - Proper initialization
+
+2. **✅ Visual output appears** (if `headless=False`)
+   - Isaac Sim window opens
+   - Scene renders correctly
+   - Objects appear as expected
+
+3. **✅ Functional behavior works**
+   - Robot/objects move as described
+   - Physics simulation runs
+   - Output matches documented results
+
+4. **✅ Clean shutdown**
+   - No error messages on exit
+   - No zombie processes
+   - No GPU memory leaks
+
+### Step 4: Capture Output
+
+Document the following for each example:
+
+#### Terminal Output
+
+```
+[Sample terminal output]
+Isaac Sim Version: 2023.1.0
+Loading scene...
+Scene loaded successfully
+Robot spawned at (0, 0, 0.5)
+Simulation running...
+[Target reached]
+Simulation complete
+```
+
+#### Visual Output
+
+Take screenshots showing:
+- Initial scene state
+- Key intermediate steps
+- Final result
+
+Save screenshots: `test-output/chapter-XX/example-XX-screenshot-N.png`
+
+#### Performance Metrics (optional)
+
+- Execution time
+- FPS during simulation
+- Memory usage
+- GPU utilization
+
+### Step 5: Test Error Handling
+
+Intentionally trigger common errors to verify error messages are helpful:
+
+**Test Cases**:
+1. Missing dependencies → Clear error message
+2. Invalid parameters → Informative exception
+3. Resource not found → Helpful path suggestion
+4. Isaac Sim not running → Clear instruction
+
+### Step 6: Document Results
+
+Create a test report:
+
+```markdown
+## Test Report: Chapter X, Example Y
+
+**Date**: 2025-12-25
+**Tester**: [Name]
+**Isaac Sim Version**: 2023.1.0
+**OS**: Ubuntu 22.04 / Windows 11
+**GPU**: NVIDIA RTX 3080
+
+### Test Results
+
+- ✅ Script executes without errors
+- ✅ Visual output matches description
+- ✅ Functional behavior correct
+- ✅ Clean shutdown
+
+### Terminal Output
+
+[Paste terminal output]
+
+### Screenshots
+
+![Initial state](./test-output/chapter-01/example-01-init.png)
+![Final result](./test-output/chapter-01/example-01-final.png)
+
+### Performance
+
+- Execution time: 15.3 seconds
+- Average FPS: 60
+- Peak memory: 3.2GB
+
+### Issues Found
+
+None
+
+### Recommendations
+
+Code is ready for publication.
+```
+
+---
+
+## Testing Checklist
+
+Use this checklist for EVERY code example before publication:
+
+### Basic Functionality
+- [ ] Code runs without syntax errors
+- [ ] All imports resolve successfully
+- [ ] No hardcoded paths (use relative paths or environment variables)
+- [ ] Graceful error handling for common issues
+
+### Isaac Sim Integration
+- [ ] Simulation starts correctly
+- [ ] Scene loads as expected
+- [ ] Physics behaves realistically
+- [ ] Resources (models, textures) load successfully
+- [ ] Simulation closes cleanly
+
+### Code Quality
+- [ ] Follows PEP 8 style guidelines
+- [ ] Includes docstrings for functions/classes
+- [ ] Has inline comments for complex logic
+- [ ] Variable names are descriptive
+- [ ] No magic numbers (use named constants)
+
+### Documentation
+- [ ] Expected output documented
+- [ ] Common errors documented with solutions
+- [ ] Prerequisites listed
+- [ ] Setup instructions clear
+- [ ] Troubleshooting section included
+
+### Cross-Platform Testing (if possible)
+- [ ] Tested on Linux (Ubuntu 20.04 or 22.04)
+- [ ] Tested on Windows (10 or 11)
+- [ ] Path handling works on both platforms
+- [ ] No OS-specific dependencies
+
+### Performance
+- [ ] Runs in reasonable time (<2 minutes for Beginner, <5 minutes for Advanced)
+- [ ] No memory leaks
+- [ ] GPU utilization appropriate
+- [ ] Can run on minimum recommended hardware (RTX 2060, 16GB RAM)
+
+---
+
+## Common Issues & Solutions
+
+### Issue: "ModuleNotFoundError: No module named 'omni.isaac.kit'"
+
+**Cause**: Not using Isaac Sim's Python interpreter
+
+**Solution**:
+```bash
+# Use Isaac Sim Python, not system Python
+~/.local/share/ov/pkg/isaac_sim-2023.1.0/python.sh your_script.py
+```
+
+### Issue: "RuntimeError: Simulation already running"
+
+**Cause**: Previous simulation didn't clean up properly
+
+**Solution**:
+```python
+# Always include cleanup in finally block
+try:
+    simulation_app = SimulationApp({"headless": False})
+    # ... your code ...
+finally:
+    simulation_app.close()
+```
+
+### Issue: "GPU out of memory"
+
+**Cause**: Scene too complex or memory leak
+
+**Solution**:
+- Reduce scene complexity
+- Lower resolution/quality settings
+- Ensure proper cleanup of resources
+- Check for circular references
+
+### Issue: "Headless mode doesn't work"
+
+**Cause**: Trying to run headless without proper GPU configuration
+
+**Solution**:
+```python
+# For headless on server without display
+simulation_app = SimulationApp({
+    "headless": True,
+    "renderer": "RayTracedLighting"  # or "PathTracing"
+})
+```
+
+---
+
+## Example Test Script Template
+
+```python
+"""
+Test script for Module 3, Chapter X, Example Y
+
+This script verifies that the code example runs correctly
+and produces expected output.
+"""
+
+import sys
+import time
+from pathlib import Path
+
+def test_example():
+    """
+    Run the example and verify expected behavior.
+    """
+    print("="*60)
+    print("Testing: Chapter X, Example Y")
+    print("="*60)
+
+    try:
+        # Import Isaac Sim
+        from omni.isaac.kit import SimulationApp
+
+        print("✓ Isaac Sim imports successful")
+
+        # Initialize simulation
+        simulation_app = SimulationApp({"headless": False})
+
+        print("✓ Simulation initialized")
+
+        # Your example code here
+        # ...
+
+        print("✓ Example executed successfully")
+
+        # Wait for visual verification
+        input("\nPress Enter to close simulation...")
+
+        # Cleanup
+        simulation_app.close()
+        print("✓ Clean shutdown")
+
+        return True
+
+    except Exception as e:
+        print(f"✗ Test failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+if __name__ == "__main__":
+    success = test_example()
+    sys.exit(0 if success else 1)
+```
+
+---
+
+## Continuous Testing
+
+For maintaining code quality as Isaac Sim updates:
+
+### Version Matrix
+
+Test on multiple Isaac Sim versions:
+- Isaac Sim 2023.1.0 (LTS)
+- Isaac Sim 2023.1.1 (latest stable)
+- Isaac Sim 2024.x (if available)
+
+### Automated Testing (Advanced)
+
+For larger projects, consider:
+
+```bash
+#!/bin/bash
+# test_all_examples.sh
+
+ISAAC_SIM_PYTHON=~/.local/share/ov/pkg/isaac_sim-2023.1.0/python.sh
+
+for script in test-scripts/module-03/**/*.py; do
+    echo "Testing: $script"
+    $ISAAC_SIM_PYTHON "$script"
+    if [ $? -ne 0 ]; then
+        echo "FAILED: $script"
+        exit 1
+    fi
+done
+
+echo "All tests passed!"
+```
+
+---
+
+## Reporting Issues
+
+If a code example fails testing:
+
+1. **Document the failure**:
+   - Error message (full stack trace)
+   - Environment details (OS, GPU, Isaac Sim version)
+   - Steps to reproduce
+
+2. **Attempt fixes**:
+   - Check for typos
+   - Verify imports
+   - Test with simpler code
+   - Check Isaac Sim documentation for API changes
+
+3. **Update code or documentation**:
+   - Fix the code example
+   - Update troubleshooting section
+   - Add note about version-specific behavior
+
+4. **Re-test**:
+   - Verify fix works
+   - Test on different environments if possible
+   - Document the solution
+
+---
+
+## Resources
+
+**Isaac Sim Documentation**:
+- https://docs.omniverse.nvidia.com/isaacsim/latest/index.html
+
+**Python API Reference**:
+- https://docs.omniverse.nvidia.com/py/isaacsim/index.html
+
+**Community Forum**:
+- https://forums.developer.nvidia.com/c/omniverse/simulation/69
+
+**GitHub Issues** (for bug reports):
+- https://github.com/NVIDIA-Omniverse/IsaacSim-dockerfiles/issues
+
+---
+
+Follow this workflow to ensure all code examples are high-quality, tested, and ready for student use.

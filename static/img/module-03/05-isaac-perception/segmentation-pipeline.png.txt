@@ -1,0 +1,12 @@
+# Diagram: Semantic Segmentation Pipeline
+**File**: segmentation-pipeline.png
+**Type**: Data flow diagram
+**Purpose**: Show segmentation from camera to navigable space extraction
+
+## Flow
+Camera RGB → Segmentation Model → Class Map → Floor Extraction → Costmap Integration → Navigation
+
+Visual: Show color-coded segmentation output and binary floor mask
+
+## Alt Text
+"Semantic segmentation pipeline: RGB camera input through segmentation CNN producing per-pixel class labels, floor extraction creates binary navigable space mask for navigation costmap"

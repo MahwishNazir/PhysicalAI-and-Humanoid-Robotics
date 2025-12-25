@@ -1,0 +1,83 @@
+# Diagram: Scene Creation Workflow
+
+**File**: scene-creation-workflow.png
+**Type**: Flowchart / Process diagram
+**Purpose**: Visualize the step-by-step workflow for creating simulation scenes in Isaac Sim
+
+## Flow Structure
+
+**Start** → Create USD Stage → Add Environment → Spawn Robots → Configure Physics → Run Simulation
+
+### Step-by-Step Details
+
+1. **Create USD Stage**
+   - Action: `World()`
+   - Output: Empty stage with coordinate system
+   - Icon: Document with "USD" label
+
+2. **Add Environment**
+   - Ground plane (default or custom)
+   - Lighting (dome light, directional light)
+   - Optional: Walls, obstacles, terrain
+   - Icon: Grid plane with light bulb
+
+3. **Spawn Robots**
+   - Load USD asset via `add_reference_to_stage()`
+   - Set initial pose (position, orientation)
+   - Create Articulation interface
+   - Icon: Robot silhouette
+
+4. **Configure Physics**
+   - Physics scene settings (gravity, time step)
+   - Rigid body properties (mass, collision)
+   - Joint properties (limits, drives)
+   - Icon: Gear with physics symbol (atom)
+
+5. **Initialize**
+   - Action: `world.reset()`
+   - Initializes physics state
+   - Icon: Play button with checkmark
+
+6. **Run Simulation**
+   - Loop: Compute control → Apply → Step → Read state
+   - Icon: Circular arrow (loop)
+
+7. **End** → Results/Analysis
+
+## Visual Style
+
+- **Process boxes**: Rounded rectangles (blue #3498DB)
+- **Decision points**: None (linear workflow)
+- **Data/State**: Parallelograms (gray #95A5A6)
+- **Actions**: Rectangles with icons
+- **Flow arrows**: Solid lines with arrowheads
+
+## Annotations
+
+- "Programmatic (Python API)" label on left side
+- "Or use GUI" alternative path (dashed line) for steps 2-3
+- Time indicators: "< 1 min" for asset loading, "Real-time" for simulation loop
+
+## Alternative Paths
+
+**GUI Workflow** (parallel path, dashed):
+- Step 1: File → New Stage (GUI)
+- Step 2: Create → Physics Scene (menu)
+- Step 3: Drag-drop robot from Content Browser
+- Step 4: Property panel adjustments
+- Converges back to Step 5 (Initialize)
+
+## Color Scheme
+
+- NVIDIA Green (#76B900): Isaac Sim-specific actions
+- Blue (#3498DB): USD/Omniverse operations
+- Gray (#95A5A6): Configuration steps
+- Green (#27AE60): Success/completion states
+
+## Alt Text
+
+"Scene creation workflow flowchart showing 6 sequential steps: create USD stage, add environment, spawn robots, configure physics, initialize, and run simulation loop. Includes alternative GUI path."
+
+## Creation Instructions
+
+Use Draw.io or Lucidchart to create this flowchart following the DIAGRAMS_README.md style guide. Arrange vertically with left-to-right alternative paths.

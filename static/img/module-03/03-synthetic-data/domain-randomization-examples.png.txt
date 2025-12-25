@@ -1,0 +1,160 @@
+# Diagram: Domain Randomization Examples
+
+**File**: domain-randomization-examples.png
+**Type**: Comparison grid / Before-after visualization
+**Purpose**: Show impact of different randomization parameters on same scene
+
+## Grid Layout
+
+**4x4 Grid showing same warehouse scene with systematic variations**
+
+### Row 1: Lighting Variations
+
+**Image 1**: Bright (3000 lux, neutral color)
+- High contrast, sharp shadows
+- Overexposed metal surfaces
+- Clear object boundaries
+
+**Image 2**: Medium (1000 lux, warm color)
+- Balanced exposure
+- Soft shadows (golden hour)
+- Natural appearance
+
+**Image 3**: Dim (200 lux, cool color)
+- Low contrast, noisy
+- Barely visible shadows
+- Moonlight/warehouse night shift
+
+**Image 4**: Colored (1500 lux, blue LED)
+- Unnatural color cast
+- Mixed color temperatures
+- Industrial LED lighting
+
+### Row 2: Texture Variations
+
+**Image 1**: Cardboard Boxes
+- Matte brown material
+- Low specularity
+- Warehouse shipping boxes
+
+**Image 2**: Metal Containers
+- High specularity, reflections
+- Brushed aluminum texture
+- Industrial equipment
+
+**Image 3**: Plastic Bins
+- Medium specularity
+- Colorful (red, blue, yellow)
+- Retail storage
+
+**Image 4**: Wood Crates
+- Rough grain texture
+- Natural brown tones
+- Agricultural/farm equipment
+
+### Row 3: Camera Pose Variations
+
+**Image 1**: Eye Level (1.5m height, 0° elevation)
+- Human perspective
+- Horizontal view
+- Ground-level robot view
+
+**Image 2**: Bird's Eye (5m height, -45° elevation)
+- Overhead surveillance view
+- Warehouse camera angle
+- Path planning perspective
+
+**Image 3**: Low Angle (0.3m height, +15° elevation)
+- Ground robot perspective
+- Looking up at objects
+- Small robot (vacuum, delivery bot)
+
+**Image 4**: Tilted (2m height, 30° roll)
+- Unstable camera mount
+- Robot on incline
+- Edge case for perception
+
+### Row 4: Background Clutter Variations
+
+**Image 1**: Empty (0-2 objects)
+- Clean floor
+- Minimal distractions
+- Lab environment
+
+**Image 2**: Sparse (3-5 objects)
+- Light clutter
+- Organized workspace
+- Early deployment
+
+**Image 3**: Dense (8-12 objects)
+- High clutter
+- Active warehouse
+- Realistic deployment
+
+**Image 4**: Extreme (15+ objects)
+- Chaotic environment
+- Peak season warehouse
+- Stress test for perception
+
+## Visual Style
+
+**Grid Format**:
+- 4 columns × 4 rows
+- Each cell: 300x200px thumbnail
+- 2px borders between cells
+- Labels below each image
+
+**Annotations**:
+- Row labels (left side):
+  - "Lighting"
+  - "Textures"
+  - "Camera Pose"
+  - "Clutter"
+- Column labels (top):
+  - Variation 1, 2, 3, 4
+- Parameter values shown below each image
+
+**Highlighting**:
+- Green check mark on "Medium/Balanced" images (baseline)
+- Orange warning on "Extreme" images (edge cases)
+- Blue info icon on "Varied" images (training benefit)
+
+## Overlay Information
+
+**Top Banner**:
+"Domain Randomization: Training on Diverse Synthetic Data → Robust Real-World Performance"
+
+**Bottom Legend**:
+```
+✓ Baseline conditions
+⚠️ Edge cases (rare but important)
+ℹ️ Recommended training variations
+```
+
+**Statistics Panel** (right side):
+```
+Training Set Composition:
+- Lighting: 33% each (bright/medium/dim)
+- Textures: 25% each (4 types)
+- Camera: 40% eye-level, 30% bird's eye, 20% low, 10% tilted
+- Clutter: Normal distribution (μ=6 objects, σ=3)
+```
+
+## Color Scheme
+
+- Borders: Dark gray (#2C3E50)
+- Labels: Black text, white background
+- Highlights:
+  - Baseline: Green (#27AE60)
+  - Edge case: Orange (#F39C12)
+  - Recommended: Blue (#3498DB)
+
+## Alt Text
+
+"Grid showing domain randomization impact: 4 rows (lighting, textures, camera pose, clutter) × 4 variations each. Demonstrates how systematic scene variation during training improves real-world model robustness."
+
+## Creation Instructions
+
+Use Figma or Photoshop to create this 4x4 comparison grid. Each cell should be a rendered screenshot from Isaac Sim showing the same base scene (warehouse with boxes) with one parameter varied. Follow DIAGRAMS_README.md style guide for consistent framing and annotations.
+
+**Alternative**: Create as an interactive web demo where users can toggle randomization parameters to see real-time updates.

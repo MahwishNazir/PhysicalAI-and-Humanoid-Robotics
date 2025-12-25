@@ -1,0 +1,161 @@
+# Diagram: Sensor Modalities Comparison
+
+**File**: sensor-modalities-comparison.png
+**Type**: Multi-view comparison / Sensor visualization
+**Purpose**: Show same scene captured by different sensor modalities simultaneously
+
+## Layout
+
+**Central Scene** + **4 Surrounding Panels**
+
+### Central Scene (3D Visualization)
+
+Isometric view showing:
+- Warehouse environment (10m x 10m)
+- 5 objects: boxes, cylinders, robot
+- 4 sensors positioned around scene:
+  - RGB camera (green cone, 60° FOV)
+  - Depth camera (blue cone, 45° FOV)
+  - Lidar (red circle, 360° scan plane)
+  - Semantic camera (purple cone, 60° FOV)
+
+Sensor positions labeled with icons and names.
+
+### Panel 1: RGB Camera (Top Left)
+
+**View**: Photorealistic color image
+
+Visual elements:
+- Full color (texture, lighting, shadows)
+- Realistic materials (metal, cardboard, plastic)
+- Natural appearance
+- Resolution: 1920x1080
+
+**Metadata Box**:
+```
+RGB Camera
+- Format: 8-bit RGB
+- Uses: Texture, appearance, color-based detection
+- File size: 2-5 MB (PNG/JPG)
+- Training: Object recognition, visual navigation
+```
+
+### Panel 2: Depth Camera (Top Right)
+
+**View**: Grayscale depth map
+
+Visual elements:
+- Gradient from black (near) to white (far)
+- Closer objects darker, distant objects lighter
+- No color/texture information
+- Clear object boundaries
+
+**Depth Scale** (color bar):
+```
+0m ████ (black)
+5m ████ (gray)
+10m ████ (white)
+```
+
+**Metadata Box**:
+```
+Depth Camera
+- Format: Float32 (meters)
+- Uses: 3D reconstruction, obstacle avoidance
+- File size: 2 MB (NPY)
+- Training: Depth estimation, 3D detection
+```
+
+### Panel 3: Lidar Point Cloud (Bottom Left)
+
+**View**: 3D point cloud visualization
+
+Visual elements:
+- Colored points (by distance or intensity)
+- Sparse representation (1000-10000 points)
+- 360° coverage, 30° vertical FOV
+- Ground plane visible
+
+**Point Rendering**:
+- Dots colored by distance (heatmap)
+- OR colored by semantic class (if labeled)
+
+**Metadata Box**:
+```
+Lidar
+- Format: [N, 3] float (x, y, z)
+- Uses: SLAM, 3D mapping, long-range detection
+- File size: 1-5 MB (NPY/PCD)
+- Training: Point cloud segmentation, detection
+```
+
+### Panel 4: Semantic Segmentation (Bottom Right)
+
+**View**: Color-coded class labels
+
+Visual elements:
+- Flat colors, no texture
+- Each object single color (class ID)
+- Perfect pixel-level labels
+- No gradients or shading
+
+**Color Legend**:
+```
+Ground: Green (#27AE60)
+Box: Red (#E74C3C)
+Cylinder: Blue (#3498DB)
+Robot: Orange (#F39C12)
+Background: Black (#000000)
+```
+
+**Metadata Box**:
+```
+Semantic Segmentation
+- Format: 8-bit class IDs
+- Uses: Pixel-level classification, scene understanding
+- File size: 1 MB (PNG)
+- Training: Segmentation models (FCN, DeepLab)
+```
+
+## Comparison Table (Bottom)
+
+| Modality | Data Type | Size | Range | Frame Rate | Primary Use |
+|----------|-----------|------|-------|------------|-------------|
+| RGB | uint8 [H,W,3] | 2-5 MB | Visual spectrum | 30-60 Hz | Recognition |
+| Depth | float32 [H,W] | 2 MB | 0.1-100m | 30 Hz | 3D geometry |
+| Lidar | float32 [N,3] | 1-5 MB | 1-100m | 10-20 Hz | Mapping |
+| Semantic | uint8 [H,W] | 1 MB | Class IDs | 30 Hz | Ground truth |
+
+## Annotations
+
+- Arrows from central scene to each panel showing sensor FOV
+- "All Captured Simultaneously" label emphasizing perfect sync
+- "Ground Truth Available" badge on semantic panel
+- "Perfect Alignment" note highlighting multi-modal registration
+
+## Visual Style
+
+- Central scene: Light gray background (#ECF0F1)
+- Sensor panels: White background, 2px borders
+- Sensor FOV cones in central scene: Semi-transparent, color-coded
+- Table: Alternating row colors for readability
+
+## Color Scheme
+
+Sensor color coding:
+- RGB: Green (#27AE60)
+- Depth: Blue (#3498DB)
+- Lidar: Red (#E74C3C)
+- Semantic: Purple (#9B59B6)
+
+Match these colors in central scene FOV visualization.
+
+## Alt Text
+
+"Sensor modality comparison showing same warehouse scene captured simultaneously by RGB camera (photorealistic color), depth camera (grayscale distance map), lidar (3D point cloud), and semantic segmentation camera (color-coded class labels). Central 3D visualization shows sensor positions and fields of view."
+
+## Creation Instructions
+
+Use Figma or Adobe Illustrator for layout. Central 3D scene can be a simplified isometric wireframe. Sensor views should be actual rendered outputs from Isaac Sim for the same scene. Follow DIAGRAMS_README.md style guide for colors and typography.
+
+**Technical Note**: To generate matching views, place all sensors at same timestamp in Isaac Sim and capture in single frame.

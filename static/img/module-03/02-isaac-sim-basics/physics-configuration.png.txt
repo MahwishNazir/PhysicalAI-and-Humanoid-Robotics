@@ -1,0 +1,125 @@
+# Diagram: Physics Configuration Hierarchy
+
+**File**: physics-configuration.png
+**Type**: Hierarchy diagram / Tree structure
+**Purpose**: Show the three-layer physics configuration system in Isaac Sim
+
+## Structure
+
+### Layer 1: Physics Scene (Global)
+**Top level** - Applies to entire simulation
+
+```
+┌─────────────────────────────────────┐
+│     Physics Scene (Global)          │
+├─────────────────────────────────────┤
+│ • Gravity: (0, 0, -9.81) m/s²      │
+│ • Time step: 1/60 s (60 Hz)        │
+│ • Solver iterations: 4 pos, 1 vel  │
+│ • Broadphase type: GPU SAP         │
+│ • Enable CCD: False                 │
+└─────────────────────────────────────┘
+```
+
+### Layer 2: Rigid Body (Per-Object)
+**Middle level** - Properties of individual robot links/objects
+
+```
+    ┌────────────────────────────┐
+    │   Rigid Body Properties    │
+    ├────────────────────────────┤
+    │ • Mass: 1.5 kg            │
+    │ • Center of Mass: (0,0,0) │
+    │ • Inertia Tensor:         │
+    │   [[0.01, 0, 0],          │
+    │    [0, 0.01, 0],          │
+    │    [0, 0, 0.02]]          │
+    │ • Collision Shape: Convex │
+    │ • Linear Damping: 0.1     │
+    │ • Angular Damping: 0.1    │
+    └────────────────────────────┘
+```
+
+### Layer 3: Joint Configuration (Articulation)
+**Bottom level** - Properties of connections between rigid bodies
+
+```
+        ┌──────────────────────────────┐
+        │   Joint (Revolute)           │
+        ├──────────────────────────────┤
+        │ • Axis: (0, 0, 1)           │
+        │ • Lower Limit: -3.14 rad    │
+        │ • Upper Limit: 3.14 rad     │
+        │ • Max Velocity: 2.0 rad/s   │
+        │ • Max Effort: 50 N·m        │
+        │                              │
+        │ Drive Parameters (PD):       │
+        │ • Stiffness: 1000 N·m/rad   │
+        │ • Damping: 100 N·m·s/rad    │
+        │ • Target: 0.0 rad           │
+        └──────────────────────────────┘
+```
+
+## Visual Hierarchy
+
+**Tree structure showing inheritance:**
+
+```
+Physics Scene (GPU PhysX 5)
+│
+├─ Robot Articulation
+│  ├─ Base Link (Rigid Body)
+│  │  └─ Collision: Convex Hull
+│  │
+│  ├─ Joint 1: Revolute
+│  │  ├─ Child Link (Rigid Body)
+│  │  │  └─ Mass: 0.8 kg
+│  │  └─ Drive: Stiffness=1000, Damping=100
+│  │
+│  └─ Joint 2: Prismatic
+│     ├─ Child Link (Rigid Body)
+│     └─ Drive: Stiffness=5000, Damping=200
+│
+└─ Environment Objects
+   ├─ Ground Plane (Static Rigid Body)
+   └─ Dynamic Box (Rigid Body)
+      └─ Collision: Box Primitive
+```
+
+## Visual Elements
+
+**Layer Boxes**:
+- Scene level: Large box at top (yellow #F39C12)
+- Rigid body level: Medium boxes (blue #3498DB)
+- Joint level: Smaller boxes (green #27AE60)
+
+**Arrows**:
+- Downward arrows showing "configures" relationship
+- Dashed lines showing "inherits from" relationships
+
+**Icons**:
+- Scene: Globe icon
+- Rigid body: Cube icon
+- Joint: Hinge/connector icon
+
+## Annotations
+
+- "Global settings affect all objects" (top)
+- "Per-object physics properties" (middle)
+- "Joint-specific control parameters" (bottom)
+- "PD controller: τ = K_p(q_target - q) - K_d(q_dot)" (formula callout)
+
+## Color Scheme
+
+- Yellow (#F39C12): Scene-level (global)
+- Blue (#3498DB): Rigid body properties
+- Green (#27AE60): Joint configuration
+- Gray (#95A5A6): Text and borders
+
+## Alt Text
+
+"Physics configuration hierarchy showing three layers: global physics scene settings at top, per-object rigid body properties in middle, and joint-specific drive parameters at bottom, with tree structure showing inheritance."
+
+## Creation Instructions
+
+Use Draw.io or Figma to create this hierarchy diagram following the DIAGRAMS_README.md style guide. Use nested boxes to show containment and arrows to show configuration flow.

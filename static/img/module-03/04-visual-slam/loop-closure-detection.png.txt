@@ -1,0 +1,186 @@
+# Diagram: Loop Closure Detection
+
+**File**: loop-closure-detection.png
+**Type**: Process flow + visual example
+**Purpose**: Illustrate how SLAM detects and uses loop closures to correct drift
+
+## Layout
+
+**Top Section**: Trajectory Visualization (Before/After)
+**Bottom Section**: Detection Pipeline
+
+### Top Section: Trajectory Comparison
+
+**Left Side - Before Loop Closure**:
+```
+Top-down view of robot trajectory:
+
+Start ●───────→ A
+      │
+      │
+      ↓
+      B ←───── C
+      │        ↑
+      │        │
+      ↓        │
+      D ──────→E
+      │
+      │  ❌ Error: 1.8m gap
+      ↓
+     End • (doesn't align with Start)
+```
+
+Visual elements:
+- Green dot: Start position
+- Blue line: Traveled path
+- Red dot: End position
+- Dashed red line: 1.8m error from start
+- Label: "Accumulated drift: 2.3% over 80m"
+
+**Right Side - After Loop Closure**:
+```
+Same trajectory after correction:
+
+Start/End ●───────→ A
+          │
+          │
+          ↓
+          B ←───── C
+          │        ↑
+          │        │
+          ↓        │
+          D ──────→E
+          │
+          ↓ ✓ Corrected: <8cm error
+          └─────┘  (loop closed)
+```
+
+Visual elements:
+- Green dot: Start/End (aligned)
+- Blue line: Corrected path (slightly adjusted)
+- Green check: Loop successfully closed
+- Label: "After optimization: 0.09% error"
+
+### Bottom Section: Detection Pipeline
+
+**5-Step Process Flow**:
+
+**Step 1: Current Frame Arrives**
+```
+[Camera Image]
+  t = 240s
+  Frame 7200
+```
+Shows: Current camera view of warehouse entrance
+
+**Step 2: Extract Features**
+```
+[Feature Visualization]
+• 1,247 ORB features detected
+• Compute BoW vector
+```
+Shows: Same image with green dots marking features
+
+**Step 3: Query Database**
+```
+[Database Icon]
+Keyframe Database
+├─ KF #50 (t=1.6s)
+├─ KF #145 (t=4.8s)
+├─ ...
+└─ KF #6800 (t=226s)
+
+BoW Similarity Scores:
+• KF #50:  0.92 ⚠️ HIGH!
+• KF #145: 0.34
+• KF #240: 0.15
+```
+
+Label: "Match found: Current ≈ KF#50"
+
+**Step 4: Geometric Verification**
+```
+[Side-by-side comparison]
+KF #50 (t=1.6s)     Current (t=240s)
+[Image]              [Image]
+
+Feature matching:
+• 387 tentative matches
+• RANSAC: 312 inliers
+• Success! ✓
+```
+
+Overlay: Green lines connecting matched features
+
+**Step 5: Add Loop Constraint**
+```
+[Pose Graph Diagram]
+
+Nodes (camera poses):
+○ KF #50
+○ KF #51
+   ...
+○ KF #7199
+○ KF #7200 (current)
+
+Edges:
+─── Odometry edges (blue)
+═══ Loop closure edge (green, thick)
+    from KF #7200 to KF #50
+```
+
+Label: "New constraint: align current with KF#50"
+
+## Process Annotations
+
+**Timing Info**:
+- Feature extraction: 15ms
+- Database query: 5ms
+- Geometric verification: 45ms
+- Total: 65ms (real-time!)
+
+**Threshold Values**:
+- BoW similarity: >0.75 → candidate
+- RANSAC inliers: >50 → valid loop
+- Reprojection error: <2 pixels → accept
+
+## Mathematical Inset
+
+**Loop Closure Constraint**:
+```
+Relative pose between matched frames:
+
+T₇₂₀₀ ≈ T₅₀ ⊕ ΔT_loop
+
+where:
+  ΔT_loop = measured relative transform
+  ⊕ = SE(3) composition
+```
+
+This constraint is added to pose graph and optimization distributes error across all intermediate poses.
+
+## Color Scheme
+
+- Trajectory before: Blue (#3498DB)
+- Trajectory after: Green (#27AE60)
+- Error indication: Red (#E74C3C)
+- Pipeline steps: Gray boxes (#95A5A6)
+- Detected loop: Green highlight (#2ECC71)
+- BoW matching: Orange (#F39C12)
+
+## Callouts
+
+- "Without loop closure: drift accumulates indefinitely"
+- "One loop closure can correct 100+ poses"
+- "DBoW2 enables sub-second place recognition"
+- "Geometric verification prevents false positives"
+
+## Alt Text
+
+"Loop closure detection process showing trajectory before (1.8m error) and after (8cm error) loop closure correction. Bottom panel illustrates 5-step detection pipeline: current frame capture, ORB feature extraction, database query with BoW similarity, geometric verification with feature matching, and adding loop constraint to pose graph."
+
+## Creation Instructions
+
+Use Figma or Adobe Illustrator. Top section requires 2 trajectory diagrams (before/after) with clear error annotations. Bottom section is a horizontal process flow with 5 boxes showing pipeline stages. Include actual Isaac Sim screenshots for camera images. Follow DIAGRAMS_README.md style guide.
+
+**Technical Note**: Create trajectories by plotting actual SLAM output from Example 2, showing realistic drift curves.

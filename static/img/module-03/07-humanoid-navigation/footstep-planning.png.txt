@@ -1,0 +1,155 @@
+# Diagram: Footstep Planning with A* Search
+
+**File**: footstep-planning.png
+**Type**: Algorithm visualization diagram
+**Purpose**: Show A* footstep graph search and obstacle avoidance
+
+## Layout
+
+**Top Panel**: Footstep Graph Search Space
+**Middle Panel**: Planned Path Visualization
+**Bottom Panel**: A* Algorithm Details
+
+### Top Panel: Footstep Graph Search
+
+```
+Graph Structure:
+
+Nodes = Foot Placements:
+  ○ = Unvisited
+  ◐ = Open set (frontier)
+  ● = Closed set (expanded)
+  ★ = Goal
+
+Edges = Valid Transitions:
+  → = Forward step (0.2-0.5m)
+  ↗ = Diagonal step
+  ↔ = Lateral step (max 0.4m)
+```
+
+**Visual**:
+- Grid overlay (0.1m resolution)
+- Start position: Left and right foot outlines (green)
+- Goal position: Target circle (yellow star)
+- Obstacles: Gray rectangles (chair, cable, etc.)
+- Search tree expanding from start with nodes color-coded by state
+- Optimal path highlighted with thick blue line
+
+**Example Layout**:
+```
+  Goal ★
+    ↑
+    ● ← ● ← ◐ ← ◐
+    ↑   ↑   ↑
+  [Obstacle]
+    ↑
+    ● ← ● ← ● ← Start
+```
+
+### Middle Panel: Planned Footstep Sequence
+
+**Overhead View of Environment**:
+- Floor plan (8m × 4m area)
+- Obstacles marked (desk, chair, cables)
+- Footstep sequence shown as numbered foot outlines
+
+**Footstep Sequence**:
+```
+1L  2R  3L  4R  (straight walking)
+    5L  6R      (side step around chair)
+        7L  8R  (step over cable)
+            9L  10R  (final approach)
+```
+
+**Details**:
+- Left feet: Blue outlines (labeled L)
+- Right feet: Orange outlines (labeled R)
+- Step numbers: 1-10 in sequence
+- Arrows showing step direction
+- Clearance margins around obstacles (0.1m minimum)
+
+### Bottom Panel: A* Cost Computation
+
+```
+Cost Function:
+
+f(n) = g(n) + h(n)
+
+Where:
+  g(n) = Cost from start to node n
+         (number of steps taken)
+
+  h(n) = Heuristic cost from n to goal
+         (Euclidean distance from average foot position)
+
+Node Expansion:
+  For each node, generate successors:
+    - Forward steps:  0.2m to 0.5m
+    - Lateral steps:  -0.4m to +0.4m
+    - Rotation:       -25° to +25°
+
+  Filter by:
+    ✓ Collision-free
+    ✓ Kinematically valid
+    ✓ Within workspace bounds
+```
+
+## Timeline Visualization
+
+**Search Progress** (show 5 snapshots):
+
+```
+t=0ms:    Start state added to open set
+t=50ms:   Expanded 10 nodes, found straight path
+t=100ms:  Detected obstacle, exploring alternatives
+t=150ms:  Side-step branch evaluated
+t=200ms:  Goal reached, path reconstructed
+```
+
+## Annotations
+
+**Graph Panel**:
+- "Open set: Nodes to explore"
+- "Closed set: Already expanded"
+- "Edges: Valid footstep transitions"
+
+**Path Panel**:
+- "16 footsteps total"
+- "Average step length: 0.35m"
+- "Planning time: 0.8 seconds"
+
+**Cost Panel**:
+- "A* guarantees optimal path"
+- "Heuristic guides search toward goal"
+
+## Metrics Display
+
+```
+Planning Statistics:
+  - Path length:        8.2 meters
+  - Number of steps:    16
+  - Planning time:      0.8 seconds
+  - Nodes expanded:     124
+  - Path optimality:    Guaranteed (A*)
+  - Obstacle clearance: ≥ 0.15m
+```
+
+## Color Scheme
+
+- Start position: Green (#27AE60)
+- Goal position: Yellow (#F39C12)
+- Obstacles: Gray (#95A5A6)
+- Open set nodes: Light blue (#AED6F1)
+- Closed set nodes: Dark blue (#2874A6)
+- Optimal path: Bright blue (#3498DB), thickness = 3px
+- Left feet: Blue (#3498DB)
+- Right feet: Orange (#E67E22)
+- Grid: Light gray (#ECF0F1)
+
+## Alt Text
+
+"Footstep planning diagram showing A* search on footstep graph (top: nodes representing foot placements connected by edges for valid transitions, search expands from start to goal avoiding obstacles), planned footstep sequence (middle: overhead view with numbered left/right foot placements navigating around chair and stepping over cable), and A* cost function (bottom: f=g+h with g as steps taken and h as heuristic distance to goal)."
+
+## Creation Instructions
+
+Use Draw.io with three horizontal panels. Top panel shows graph search visualization with nodes and edges. Middle panel shows overhead floor plan with foot outlines. Bottom shows formulas in monospace font. Use color coding to distinguish node states and foot types. Follow DIAGRAMS_README.md style guide.

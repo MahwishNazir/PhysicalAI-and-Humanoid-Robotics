@@ -1,0 +1,406 @@
+# Exercise Solution Template
+
+Use this template for all "Try It Yourself" exercises in Module 3 chapters.
+
+---
+
+## Template Structure
+
+Each exercise should follow this exact format:
+
+```markdown
+### Exercise [Number]: [Title] ([Difficulty] - [Estimated Time])
+
+**Problem**:
+[Clear, specific objective. Include all requirements and constraints.]
+
+[Optional: scenario or context that makes the problem more engaging]
+
+**Requirements**:
+- Requirement 1
+- Requirement 2
+- Requirement 3
+
+**Expected Output**:
+[Describe what the correct solution should produce]
+
+**Hints**:
+<details>
+<summary>Hint 1: Getting Started</summary>
+
+[Strategic hint to guide student toward solution approach]
+</details>
+
+<details>
+<summary>Hint 2: [Specific Challenge]</summary>
+
+[Additional guidance for a specific part of the problem]
+</details>
+
+<details>
+<summary>Hint 3: [Advanced Consideration]</summary>
+
+[Optional third hint for more complex problems]
+</details>
+
+**Solution**:
+<details>
+<summary>Click to reveal solution</summary>
+
+```python
+"""
+Solution for Exercise [Number]: [Title]
+
+This solution demonstrates [key concept] by [approach].
+"""
+
+# Complete working code with extensive comments
+# explaining the solution approach and key decisions
+
+# [Full code here...]
+```
+
+**How This Solution Works**:
+
+1. **[Step 1 Name]** (Lines X-Y): [Explanation of what this part does and why]
+
+2. **[Step 2 Name]** (Lines X-Y): [Explanation...]
+
+3. **[Step 3 Name]** (Lines X-Y): [Explanation...]
+
+**Design Decisions**:
+
+- **Why [decision]**: [Rationale for choosing this approach over alternatives]
+- **Trade-offs**: [What we gained vs. what we sacrificed]
+- **Optimization**: [If applicable, how this could be further optimized]
+
+**Common Mistakes to Avoid**:
+
+❌ **Mistake 1**: [Description]
+- **Why it's wrong**: [Explanation]
+- **Correct approach**: [How to do it right]
+
+❌ **Mistake 2**: [Description]
+- **Why it's wrong**: [Explanation]
+- **Correct approach**: [How to do it right]
+
+**Extensions**:
+
+Want to take this further? Try:
+- Extension 1: [Suggestion for enhancing the solution]
+- Extension 2: [Another way to build on this exercise]
+- Extension 3: [Advanced challenge]
+
+</details>
+
+**Learning Objective**:
+
+This exercise reinforces **[primary concept]** by having you [specific action]. You practice:
+- [Skill 1 developed]
+- [Skill 2 developed]
+- [Skill 3 developed]
+```
+
+---
+
+## Example: Beginner Level
+
+```markdown
+### Exercise 1: Spawn Multiple Robots (Beginner - 15-20 minutes)
+
+**Problem**:
+
+Create an Isaac Sim scene with three different robots positioned in a triangular formation. Each robot should be separated by 2 meters from the others.
+
+Load the following robot models:
+1. Carter robot at position (0, 0, 0.5)
+2. Franka arm at position (2, 0, 0)
+3. ANYmal quadruped at position (1, 1.732, 0.3)
+
+Ensure all robots load successfully and the simulation runs for 5 seconds before closing.
+
+**Requirements**:
+- Use Isaac Sim 2023.1+ Python API
+- Load robots using built-in asset paths
+- Set appropriate spawn heights to prevent falling through ground
+- Include basic error handling for missing assets
+
+**Expected Output**:
+
+```
+Initializing simulation...
+Loading Carter robot at (0.0, 0.0, 0.5)
+Carter loaded successfully
+Loading Franka arm at (2.0, 0.0, 0.0)
+Franka loaded successfully
+Loading ANYmal quadruped at (1.0, 1.732, 0.3)
+ANYmal loaded successfully
+Simulation running for 5 seconds...
+Simulation complete
+```
+
+Plus a visual Isaac Sim window showing all three robots in triangular formation.
+
+**Hints**:
+
+<details>
+<summary>Hint 1: Getting Started</summary>
+
+Start by creating a basic simulation app, then add a ground plane before spawning robots. Look up the asset paths for each robot in the Isaac Sim documentation or use the built-in asset browser.
+</details>
+
+<details>
+<summary>Hint 2: Robot Positioning</summary>
+
+Use the `add_reference_to_stage()` function to load robots, then modify their translation property using `set_world_pose()`. Remember that positions are in meters.
+</details>
+
+<details>
+<summary>Hint 3: Timing</summary>
+
+Use a simple loop with `simulation_app.update()` to run the simulation. Calculate the number of frames needed based on the simulation timestep (usually 60 FPS).
+</details>
+
+**Solution**:
+
+<details>
+<summary>Click to reveal solution</summary>
+
+```python
+"""
+Solution for Exercise 1: Spawn Multiple Robots
+
+This solution demonstrates robot spawning and positioning by loading
+three different robot models in a triangular formation.
+"""
+
+from omni.isaac.kit import SimulationApp
+
+# Initialize simulation
+simulation_app = SimulationApp({"headless": False})
+
+from omni.isaac.core import World
+from omni.isaac.core.utils.stage import add_reference_to_stage
+from pxr import Gf
+import time
+
+def main():
+    """
+    Spawn three robots in triangular formation.
+    """
+    # Create world (includes ground plane)
+    world = World()
+    world.scene.add_default_ground_plane()
+
+    print("Initializing simulation...")
+
+    # Define robot configurations
+    robots = [
+        {
+            "name": "Carter",
+            "asset_path": "/Isaac/Robots/Carter/carter_v1.usd",
+            "position": (0.0, 0.0, 0.5)
+        },
+        {
+            "name": "Franka",
+            "asset_path": "/Isaac/Robots/Franka/franka.usd",
+            "position": (2.0, 0.0, 0.0)
+        },
+        {
+            "name": "ANYmal",
+            "asset_path": "/Isaac/Robots/ANYbotics/anymal_c.usd",
+            "position": (1.0, 1.732, 0.3)
+        }
+    ]
+
+    # Spawn each robot
+    for robot in robots:
+        try:
+            print(f"Loading {robot['name']} at {robot['position']}")
+
+            # Add robot to stage
+            robot_prim = add_reference_to_stage(
+                usd_path=robot["asset_path"],
+                prim_path=f"/World/{robot['name']}"
+            )
+
+            # Set position
+            from omni.isaac.core.utils.prims import get_prim_at_path
+            prim = get_prim_at_path(f"/World/{robot['name']}")
+
+            if prim.IsValid():
+                from omni.isaac.core.utils.xforms import set_world_pose
+                set_world_pose(
+                    prim_path=f"/World/{robot['name']}",
+                    position=robot["position"]
+                )
+                print(f"{robot['name']} loaded successfully")
+            else:
+                print(f"Warning: {robot['name']} prim not found")
+
+        except Exception as e:
+            print(f"Error loading {robot['name']}: {e}")
+
+    # Reset world to apply changes
+    world.reset()
+
+    # Run simulation for 5 seconds (at 60 FPS = 300 frames)
+    print("Simulation running for 5 seconds...")
+    simulation_duration = 5.0  # seconds
+    simulation_fps = 60
+    total_frames = int(simulation_duration * simulation_fps)
+
+    for frame in range(total_frames):
+        world.step(render=True)
+
+    print("Simulation complete")
+
+if __name__ == "__main__":
+    try:
+        main()
+    finally:
+        simulation_app.close()
+```
+
+**How This Solution Works**:
+
+1. **Simulation Setup** (Lines 10-18): We initialize the Isaac Sim application and create a `World` object, which automatically provides physics simulation and scene management. The ground plane prevents robots from falling infinitely.
+
+2. **Robot Configuration** (Lines 23-41): We define a list of dictionaries containing each robot's name, asset path, and spawn position. This data-driven approach makes it easy to add or modify robots.
+
+3. **Robot Spawning Loop** (Lines 44-67): For each robot:
+   - Load the USD asset using `add_reference_to_stage()`
+   - Verify the prim was created successfully
+   - Set the robot's world position using `set_world_pose()`
+   - Handle errors gracefully with try-except
+
+4. **Simulation Execution** (Lines 70-78): Run the simulation for exactly 5 seconds by calculating the number of frames needed (5 seconds × 60 FPS = 300 frames) and stepping through each frame.
+
+**Design Decisions**:
+
+- **Why use World class**: Provides convenient scene management, physics handling, and built-in ground plane
+- **Why data-driven robot list**: Makes code scalable and easier to modify robot configurations
+- **Why error handling**: Prevents entire script from crashing if one robot asset fails to load
+- **Trade-off**: Uses higher-level World API instead of lower-level stage manipulation for simplicity
+
+**Common Mistakes to Avoid**:
+
+❌ **Mistake 1**: Forgetting to call `world.reset()` after spawning robots
+- **Why it's wrong**: Robots won't be properly initialized in the physics simulation
+- **Correct approach**: Always call `world.reset()` after making scene changes
+
+❌ **Mistake 2**: Using system Python instead of Isaac Sim Python
+- **Why it's wrong**: `omni.isaac` modules won't be available
+- **Correct approach**: Run with `isaac-sim.python.sh` or `python.bat` from Isaac Sim installation
+
+❌ **Mistake 3**: Hardcoding frame count instead of calculating from duration
+- **Why it's wrong**: Not portable if simulation FPS changes
+- **Correct approach**: Calculate frames as `duration_seconds * fps`
+
+**Extensions**:
+
+Want to take this further? Try:
+- **Add robot motion**: Make each robot move in a small circle or patrol pattern
+- **Dynamic formation**: Spawn robots in different formations (square, pentagon, random)
+- **Interactive control**: Add keyboard input to spawn robots on demand
+- **Collision detection**: Add sensors to detect when robots get too close
+
+</details>
+
+**Learning Objective**:
+
+This exercise reinforces **robot spawning and scene management** by having you load multiple robot models and position them precisely. You practice:
+- Using the Isaac Sim Core API for scene setup
+- Loading USD assets from Isaac's asset library
+- Applying transformations (translation) to scene objects
+- Managing simulation timing and frame-by-frame execution
+```
+
+---
+
+## Example: Intermediate Level
+
+```markdown
+### Exercise 2: Create Dynamic Obstacle Course (Intermediate - 30-45 minutes)
+
+**Problem**:
+
+Build an obstacle course for a mobile robot with:
+- 5 randomly positioned boxes (obstacles)
+- A start zone (green) and goal zone (red)
+- Physics-enabled obstacles that can be pushed
+- Visual feedback when robot reaches goal
+
+The robot should navigate from start to goal, avoiding or pushing through obstacles.
+
+[Rest of exercise following same template structure...]
+```
+
+---
+
+## Example: Advanced Level
+
+```markdown
+### Exercise 3: Multi-Robot Coordination (Advanced - 60-90 minutes)
+
+**Problem**:
+
+Implement a multi-robot system where 3 robots must coordinate to transport a large object from point A to point B. The object is too heavy for one robot to move alone.
+
+Requirements:
+- Use 3 Carter robots
+- Create a 2m × 1m × 0.5m box (the payload)
+- Robots must grasp the box simultaneously
+- Coordinate movement to transport box 5 meters
+- Detect successful delivery
+
+[Rest of exercise following same template structure, including more complex hints and solution...]
+```
+
+---
+
+## Difficulty Guidelines
+
+### Beginner (15-30 minutes)
+- **Focus**: Single concept or skill
+- **Code length**: 30-80 lines
+- **Hints**: 2-3 detailed hints covering each step
+- **Complexity**: Direct application of chapter concepts
+- **Example**: Spawn objects, basic movement, simple scene creation
+
+### Intermediate (30-60 minutes)
+- **Focus**: Combining 2-3 concepts
+- **Code length**: 80-150 lines
+- **Hints**: 2 strategic hints (not step-by-step)
+- **Complexity**: Requires some problem-solving and integration
+- **Example**: Create interactive scenes, physics simulations, sensor integration
+
+### Advanced (60-90 minutes)
+- **Focus**: Open-ended problem requiring design decisions
+- **Code length**: 150-300 lines
+- **Hints**: 1-2 architectural hints only
+- **Complexity**: Multiple approaches possible, requires optimization
+- **Example**: Multi-agent systems, complex behaviors, performance tuning
+
+---
+
+## Checklist for Exercise Quality
+
+Before publishing an exercise:
+
+- [ ] **Problem statement is clear**: No ambiguity about requirements
+- [ ] **Difficulty appropriate**: Matches the indicated level
+- [ ] **Time estimate realistic**: Tested with target audience
+- [ ] **Hints are helpful**: Guide without giving away solution
+- [ ] **Solution is complete**: Fully working code that runs successfully
+- [ ] **Explanation is thorough**: "How This Works" section explains key concepts
+- [ ] **Common mistakes documented**: Address anticipated student errors
+- [ ] **Extensions provided**: Suggestions for further exploration
+- [ ] **Learning objective stated**: Clear connection to chapter concepts
+- [ ] **Code is tested**: Solution runs in Isaac Sim 2023.1+
+- [ ] **Comments are extensive**: Solution code is well-documented
+- [ ] **Best practices shown**: Solution demonstrates good coding habits
+
+---
+
+Use this template to create consistent, high-quality exercises that reinforce chapter learning objectives and provide appropriate challenge levels for students.

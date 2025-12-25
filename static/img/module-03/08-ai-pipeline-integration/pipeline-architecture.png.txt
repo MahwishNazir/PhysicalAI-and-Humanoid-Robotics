@@ -1,0 +1,209 @@
+# Diagram: End-to-End AI Pipeline Architecture
+
+**File**: pipeline-architecture.png
+**Type**: System architecture diagram with data flow
+**Purpose**: Show complete integrated pipeline from sensors to control
+
+## Layout
+
+**Vertical layers from bottom to top**:
+1. Hardware/Sensors Layer
+2. Perception Layer
+3. Planning Layer
+4. Control Layer
+5. Actuation Layer
+
+**Horizontal**: Data flow arrows connecting components
+
+### Layer 1: Hardware/Sensors (Bottom)
+
+```
+Sensors:
+┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
+│  Camera  │  │   Lidar  │  │   IMU    │  │  Joints  │
+│  30 Hz   │  │  10 Hz   │  │ 100 Hz   │  │ 1000 Hz  │
+└────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘
+     │             │              │             │
+     └─────────────┴──────────────┴─────────────┘
+                         ↓
+```
+
+**Components**:
+- Camera sensor (rectangle, camera icon)
+- Lidar sensor (rectangle, radar icon)
+- IMU sensor (rectangle, gyroscope icon)
+- Joint encoders (rectangle, gear icon)
+- Data rates labeled (Hz)
+
+### Layer 2: Perception (Processing)
+
+```
+Perception Modules:
+┌──────────────────────────────────────────────┐
+│                                              │
+│  ┌──────────┐  ┌──────────┐  ┌───────────┐  │
+│  │   DOPE   │  │   SLAM   │  │ Semantic  │  │
+│  │ Object   │  │  Locali- │  │ Segmen-   │  │
+│  │ 6DOF Pose│  │  zation  │  │ tation    │  │
+│  └────┬─────┘  └────┬─────┘  └─────┬─────┘  │
+│       │             │              │         │
+└───────┼─────────────┼──────────────┼─────────┘
+        │             │              │
+        └─────────────┴──────────────┘
+                    ↓
+        Object Poses + Robot Pose + Scene Map
+```
+
+**Components**:
+- DOPE module (GPU badge, 33ms latency)
+- SLAM module (CPU/GPU hybrid, 5 Hz)
+- Segmentation module (GPU, 30 Hz)
+- Output: Unified world model
+
+### Layer 3: Planning (Decision Making)
+
+```
+Planning Components:
+┌──────────────────────────────────────────────┐
+│                                              │
+│  ┌──────────┐  ┌──────────┐  ┌───────────┐  │
+│  │   Task   │  │   Nav2   │  │  Grasp    │  │
+│  │ Planner  │  │  Motion  │  │ Planning  │  │
+│  │  (FSM)   │  │ Planning │  │   (IK)    │  │
+│  └────┬─────┘  └────┬─────┘  └─────┬─────┘  │
+│       │             │              │         │
+└───────┼─────────────┼──────────────┼─────────┘
+        │             │              │
+        └─────────────┴──────────────┘
+                    ↓
+            Navigation + Manipulation Commands
+```
+
+**Components**:
+- Task planner (state machine, 10 Hz)
+- Nav2 global/local planners (5 Hz)
+- Grasp planner with IK (20 Hz)
+- Output: Target trajectories
+
+### Layer 4: Control (Execution)
+
+```
+Control Layer:
+┌──────────────────────────────────────────────┐
+│                                              │
+│  ┌──────────┐  ┌──────────┐  ┌───────────┐  │
+│  │   Base   │  │  Whole   │  │  Gripper  │  │
+│  │ Control  │  │   Body   │  │  Control  │  │
+│  │ (DWA)    │  │ Control  │  │           │  │
+│  └────┬─────┘  └────┬─────┘  └─────┬─────┘  │
+│       │             │              │         │
+└───────┼─────────────┼──────────────┼─────────┘
+        │             │              │
+        └─────────────┴──────────────┘
+                    ↓
+              Joint Commands (1000 Hz)
+```
+
+**Components**:
+- Base controller (differential drive, 20 Hz)
+- Whole-body controller (QP solver, 100 Hz)
+- Gripper controller (position control, 50 Hz)
+- Output: Joint velocity/torque commands
+
+### Layer 5: Actuation (Bottom)
+
+```
+Actuators:
+┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
+│  Wheel   │  │   Arm    │  │  Gripper │  │  Head    │
+│  Motors  │  │  Motors  │  │  Motors  │  │  Motors  │
+└────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘
+     │             │              │             │
+     └─────────────┴──────────────┴─────────────┘
+              Physical Robot Motions
+```
+
+**Components**:
+- Motor icons for each joint group
+- Feedback arrows back to sensors (closed loop)
+
+### ROS 2 Communication Layer (Overlay)
+
+**Message passing shown as connecting lines**:
+- Topics: Solid arrows (asynchronous streams)
+- Services: Dashed arrows (request-reply)
+- Actions: Thick arrows (long-running goals)
+
+**Example annotations on arrows**:
+- `/camera/rgb` (Image, 30 Hz)
+- `/scan` (LaserScan, 10 Hz)
+- `/cmd_vel` (Twist, 20 Hz)
+- `/navigate_to_pose` (Action)
+
+### Timing Diagram (Side Panel)
+
+```
+Timeline (0-100ms):
+
+Sensors (30 Hz):  ████░░░░░░████░░░░░░████
+DOPE (30 Hz):     ░░░░████░░░░░░████░░░░░░
+SLAM (10 Hz):     ████████░░░░░░░░░░░░░░░░
+Planning (5 Hz):  ████████████████░░░░░░░░
+Control (100 Hz): ██████████████████████████
+
+Legend:
+  █ = Processing
+  ░ = Idle
+```
+
+**Shows asynchronous execution of components**
+
+## Annotations
+
+**Perception Layer**:
+- "GPU-accelerated inference"
+- "33ms latency (camera → object pose)"
+
+**Planning Layer**:
+- "5 Hz replanning for dynamic environments"
+- "A* global + DWA local"
+
+**Control Layer**:
+- "100-1000 Hz closed-loop control"
+- "Joint-space trajectory tracking"
+
+**Communication**:
+- "ROS 2 DDS middleware"
+- "Zero-copy shared memory for images"
+
+## Performance Metrics (Bottom Box)
+
+```
+System Performance:
+  - End-to-end latency:    120ms (sensor → action)
+  - Perception throughput: 30 FPS
+  - Planning frequency:    5 Hz
+  - Control frequency:     1000 Hz
+  - Task success rate:     87%
+  - Average task time:     42 seconds
+```
+
+## Color Scheme
+
+- Sensors: Green (#27AE60)
+- Perception: Blue (#3498DB)
+- Planning: Purple (#9B59B6)
+- Control: Orange (#E67E22)
+- Actuation: Red (#E74C3C)
+- Data flow arrows: Gray (#95A5A6)
+- ROS topics: Dark blue (#2C3E50)
+- Timing active: Green fill (#27AE60)
+- Timing idle: Light gray fill (#ECF0F1)
+
+## Alt Text
+
+"End-to-end AI pipeline architecture showing five layers: sensors (bottom: camera 30Hz, lidar 10Hz, IMU 100Hz, joint encoders 1000Hz), perception (DOPE object detection, SLAM localization, semantic segmentation producing unified world model), planning (task planner FSM, Nav2 motion planning, grasp planning with IK), control (base controller DWA, whole-body QP controller, gripper controller), actuation (wheel/arm/gripper motors). ROS 2 topics connect components with different update rates. Side panel shows timing diagram illustrating asynchronous component execution. 120ms end-to-end latency from sensor input to motor command."
+
+## Creation Instructions
+
+Use Draw.io with five horizontal layers stacked vertically. Each layer contains 3-4 component boxes. Draw data flow arrows connecting layers (solid for topics, dashed for services). Add timing diagram in right panel showing relative execution frequency. Include performance metrics box at bottom. Follow DIAGRAMS_README.md color scheme and typography guidelines.

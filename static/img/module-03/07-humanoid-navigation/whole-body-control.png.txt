@@ -1,0 +1,205 @@
+# Diagram: Whole-Body Control Architecture
+
+**File**: whole-body-control.png
+**Type**: System architecture and control flow diagram
+**Purpose**: Illustrate task-based whole-body controller with hierarchical prioritization
+
+## Layout
+
+**Left Panel**: Task Hierarchy
+**Middle Panel**: Controller Architecture
+**Right Panel**: Example Execution
+
+### Left Panel: Task Hierarchy Pyramid
+
+```
+Task Priority Pyramid (top = highest priority):
+
+┌─────────────────────────────┐
+│   Priority 1: Balance       │  ← ZMP constraint
+│   (Hard constraint)         │     COM position/velocity
+├─────────────────────────────┤
+│   Priority 2: Foot Tracking │  ← Swing foot trajectory
+│   (Hard constraint)         │     Position + orientation
+├─────────────────────────────┤
+│   Priority 3: Posture       │  ← Joint limits
+│   (Soft objective)          │     Nominal configuration
+└─────────────────────────────┘
+```
+
+**Visual Details**:
+- Pyramid with 3 levels
+- Top level: Red (critical)
+- Middle level: Orange (important)
+- Bottom level: Yellow (optional)
+- Arrows showing information flow downward
+
+**Annotations**:
+- Priority 1: "Cannot be violated - stability critical"
+- Priority 2: "Must track trajectory to avoid tripping"
+- Priority 3: "Optimized subject to higher priorities"
+
+### Middle Panel: Controller Block Diagram
+
+```
+Control Flow:
+
+┌─────────────────┐
+│  Current State  │  q, q̇ (joints)
+└────────┬────────┘
+         ↓
+┌─────────────────────────────────────┐
+│     Forward Kinematics              │
+│  - Compute COM position/velocity    │
+│  - Compute foot positions           │
+└────────┬────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│   Task Jacobians                    │
+│  J_com  = ∂COM/∂q                   │
+│  J_foot = ∂foot/∂q                  │
+│  J_post = I (joint space)           │
+└────────┬────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│   Quadratic Program Solver          │
+│                                     │
+│   minimize: ‖J*q̇ - ẋ_desired‖²     │
+│                                     │
+│   subject to:                       │
+│   - J_balance * q̇ = ẋ_balance       │
+│   - J_foot * q̇ = ẋ_foot             │
+│   - q̇_min ≤ q̇ ≤ q̇_max               │
+└────────┬────────────────────────────┘
+         ↓
+┌─────────────────┐
+│  Joint Commands │  q̇_cmd
+└─────────────────┘
+```
+
+**Components** (each as rounded rectangle):
+1. State Input (green box)
+2. Forward Kinematics (blue box)
+3. Jacobian Computation (purple box)
+4. QP Solver (orange box)
+5. Command Output (green box)
+
+### Right Panel: Example Execution Timeline
+
+**Scenario**: Walking while reaching for object
+
+```
+Time Series (0-2 seconds):
+
+t=0.0s: Double support, arm at rest
+  Tasks: [Balance, Posture]
+  Status: ✓ All satisfied
+
+t=0.5s: Right foot swing, arm extending
+  Tasks: [Balance, Foot trajectory, Arm reach, Posture]
+  Conflicts: Arm reach + Balance compete
+  Resolution: Limit arm extension to maintain COM
+
+t=1.0s: Left foot swing, arm grasping object
+  Tasks: [Balance, Foot trajectory, Grasp stability]
+  Status: ✓ Foot tracking 98% accurate
+          ✓ COM within bounds
+
+t=1.5s: Double support, retracting with object
+  Tasks: [Balance, Arm retraction, Load compensation]
+  Adaptation: COM shifted to compensate for object mass
+
+t=2.0s: Goal reached, stable stance
+  Status: ✓ All objectives achieved
+```
+
+**Visual**:
+- Timeline with 5 snapshots (stick figures)
+- Each snapshot shows:
+  - Humanoid pose
+  - Active tasks highlighted
+  - Task satisfaction indicators (✓/✗)
+  - COM and ZMP positions
+
+## Detailed QP Formulation
+
+**Mathematical Formulation** (callout box):
+
+```
+Optimization Problem:
+
+Variables: q̇ ∈ ℝⁿ (joint velocities)
+
+Objective:
+  min  w₁‖J₁q̇ - ẋ₁‖² + w₂‖J₂q̇ - ẋ₂‖² + w₃‖J₃q̇ - ẋ₃‖²
+
+Constraints:
+  Equality:   J_balance * q̇ = ẋ_balance_desired
+              J_foot * q̇ = ẋ_foot_desired
+
+  Inequality: q̇_min ≤ q̇ ≤ q̇_max
+              ‖q̇‖ ≤ q̇_safety
+
+Solution Method:
+  - Sequential Quadratic Programming (SQP)
+  - Solved at 100-1000 Hz
+  - Computation time: 1-5ms per cycle
+```
+
+## Task Examples
+
+**Callout Boxes** (show Jacobian structure):
+
+**COM Task**:
+```
+J_com ∈ ℝ³ˣⁿ
+Maps joint velocities to COM velocity
+ẋ_com = J_com * q̇
+```
+
+**Foot Task**:
+```
+J_foot ∈ ℝ⁶ˣⁿ
+Maps joint velocities to foot twist
+[v_foot, ω_foot]ᵀ = J_foot * q̇
+```
+
+**Posture Task**:
+```
+J_posture = I_n
+Identity mapping (joint space)
+q̇_desired = K_p * (q_nominal - q_current)
+```
+
+## Performance Metrics
+
+```
+Controller Performance:
+  - Update rate:        1000 Hz
+  - Task tracking:
+    * Balance:          99.8% satisfaction
+    * Foot trajectory:  ±2mm RMS error
+    * Posture:          ±0.05 rad joint deviation
+  - Computation time:   2.3ms average
+  - Solver iterations:  3-8 per cycle
+```
+
+## Color Scheme
+
+- Priority 1 (Balance): Red (#E74C3C)
+- Priority 2 (Foot): Orange (#F39C12)
+- Priority 3 (Posture): Yellow (#F4D03F)
+- Control flow: Blue (#3498DB)
+- State boxes: Green (#27AE60)
+- Jacobians: Purple (#9B59B6)
+- QP Solver: Orange (#E67E22)
+- Success indicators: Green ✓
+- Failure indicators: Red ✗
+
+## Alt Text
+
+"Whole-body control architecture showing task hierarchy pyramid (top: balance as highest priority hard constraint, middle: foot tracking, bottom: posture as soft objective), controller block diagram (center: forward kinematics → Jacobian computation → quadratic program solver outputting joint commands), and example execution timeline (right: walking while reaching, 5 snapshots showing task satisfaction and adaptation). QP solver minimizes weighted tracking error subject to high-priority constraints and joint limits."
+
+## Creation Instructions
+
+Use Draw.io with three vertical panels. Left shows priority pyramid with color-coded levels. Center shows control flow as connected blocks with arrows. Right shows timeline with stick figure snapshots. Add callout boxes for QP formulation and performance metrics. Use consistent colors for priority levels throughout. Follow DIAGRAMS_README.md typography and spacing guidelines.

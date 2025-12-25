@@ -1,0 +1,139 @@
+# Diagram: SLAM Problem Formulation
+
+**File**: slam-problem-formulation.png
+**Type**: Mathematical concept diagram
+**Purpose**: Visualize the SLAM problem inputs, unknowns, and outputs
+
+## Layout
+
+**Three-Panel Structure**: Input → Problem → Output
+
+### Panel 1: Input (Left)
+
+**Image Sequence**
+```
+Camera Frame 1  Camera Frame 2  Camera Frame 3  ...  Camera Frame T
+    [RGB img]      [RGB img]      [RGB img]           [RGB img]
+      t=0            t=0.033        t=0.067             t=T
+```
+
+Visual: Thumbnail images showing robot's camera view over time
+
+**Known Information**:
+- Camera intrinsics K (focal length, principal point)
+- Image timestamps
+- Image correspondences (feature matches)
+
+### Panel 2: Problem Formulation (Center)
+
+**Mathematical Statement**:
+
+```
+Given: Image sequence I₁, I₂, ..., Iₜ
+
+Estimate:
+┌─────────────────────────────────┐
+│ Robot Trajectory                │
+│ T₁, T₂, ..., Tₜ ∈ SE(3)        │
+│                                 │
+│ where Tᵢ = [R | t] (4x4 matrix)│
+│            [0 | 1]              │
+└─────────────────────────────────┘
+
+┌─────────────────────────────────┐
+│ 3D Map                          │
+│ L₁, L₂, ..., Lₙ ∈ ℝ³           │
+│                                 │
+│ Landmark positions (x, y, z)    │
+└─────────────────────────────────┘
+```
+
+**Constraints**:
+```
+Observation model:
+  uᵢⱼ = π(Tᵢ, Lⱼ) + noise
+
+where:
+  uᵢⱼ = pixel observation of landmark j in frame i
+  π = projection function (3D → 2D)
+```
+
+**Challenge Box**:
+```
+⚠️ Chicken-and-Egg Problem:
+• Need trajectory to build map
+• Need map to estimate trajectory
+• Must solve both simultaneously
+```
+
+### Panel 3: Output (Right)
+
+**Estimated Trajectory** (top)
+```
+3D visualization showing:
+- Camera poses as coordinate frames (RGB axes)
+- Trajectory path as green line
+- Timestamps labeled at key poses
+```
+
+**3D Point Cloud Map** (bottom)
+```
+Sparse point cloud showing:
+- Blue dots for landmark positions
+- Points connected to observing cameras (dashed lines)
+- Coordinate system origin
+```
+
+**Metrics Box**:
+```
+Accuracy:
+✓ Position: ±5-20 cm
+✓ Orientation: ±0.5-2°
+✓ Map density: 500-5000 points
+✓ Coverage: 50-100m range
+```
+
+## Visual Elements
+
+**Color Coding**:
+- Input (known): Green (#27AE60)
+- Unknowns (to estimate): Red (#E74C3C)
+- Constraints: Blue (#3498DB)
+- Output (estimated): Orange (#F39C12)
+
+**Annotations**:
+- Arrow from Input to Problem: "Observation equations"
+- Arrow from Problem to Output: "Optimization (Bundle Adjustment)"
+- Curved arrow from Output to Problem: "Iterative refinement"
+
+**Mathematical Notation Boxes**:
+- SE(3): Special Euclidean group (3D rigid transformations)
+- π: Pinhole camera projection
+- ℝ³: 3D Euclidean space
+
+## Formulas (Bottom)
+
+**Optimization Objective**:
+```
+minimize Σᵢ Σⱼ ‖uᵢⱼ - π(Tᵢ, Lⱼ)‖²
+
+over: T₁, ..., Tₜ, L₁, ..., Lₙ
+
+subject to: Tᵢ ∈ SE(3), Lⱼ ∈ ℝ³
+```
+
+## Color Scheme
+
+- Background: Light gray (#ECF0F1)
+- Panel borders: Dark gray (#2C3E50)
+- Input highlights: Green
+- Problem unknowns: Red
+- Output results: Orange
+
+## Alt Text
+
+"SLAM problem formulation diagram showing three panels: input (image sequence and camera parameters), problem statement (estimate robot trajectory and 3D landmark positions simultaneously), and output (estimated trajectory as pose sequence and sparse 3D point cloud map)"
+
+## Creation Instructions
+
+Use Draw.io or LaTeX/TikZ to create this three-panel diagram. Center panel should emphasize the mathematical formulation with clear notation. Include visual representations (camera thumbnails, trajectory paths) alongside equations. Follow DIAGRAMS_README.md style guide for colors and typography.

@@ -1,0 +1,76 @@
+# Diagram: USD Scene Structure Hierarchy
+
+**File**: usd-structure-example.png
+**Type**: Tree diagram / Hierarchy visualization
+**Purpose**: Show USD layers, prims, attributes, and parent-child relationships
+
+## Structure
+
+### Layer Stack (Horizontal layers)
+
+**Top Layer** (final_scene.usd)
+↓ References
+**Middle Layer** (environment.usd)
+↓ References
+**Bottom Layer** (robot.usd)
+
+### Prim Hierarchy (Tree view)
+
+```
+/World (Xform) - Root prim
+├── /World/Ground (Plane)
+│   ├── Attribute: axis = "Z"
+│   └── Attribute: extent = [(-50,-50), (50,50)]
+│
+├── /World/Robot (Xform) - Referenced from robot.usd
+│   ├── Attribute: translate = (0, 0, 0.5)
+│   ├── Attribute: rotate = (0, 0, 0)
+│   │
+│   ├── /World/Robot/base_link (Mesh)
+│   │   └── Attribute: file = "robot_body.usd"
+│   │
+│   └── /World/Robot/sensors (Xform)
+│       ├── /World/Robot/sensors/camera
+│       └── /World/Robot/sensors/lidar
+│
+└── /World/Lighting (Xform)
+    └── /World/Lighting/DomeLight
+        ├── Attribute: intensity = 1000
+        └── Attribute: color = (1.0, 1.0, 0.95)
+```
+
+## Visual Elements
+
+**Layers** (top section):
+- Stacked rectangles showing composition
+- Arrows showing reference relationships
+- Color-coded: Master (green), Referenced (blue)
+
+**Prims** (bottom section):
+- Tree structure with expand/collapse indicators
+- Icons for prim types (cube, sphere, light, camera)
+- Indentation showing hierarchy
+- Attributes displayed as properties under each prim
+
+## Color Scheme
+
+- Xform prims: Light gray background
+- Mesh prims: Blue tint
+- Light prims: Yellow tint
+- Attributes: Italic gray text
+- References: Dashed lines
+
+## Annotations
+
+- "Layer composition" label at top
+- "Prim hierarchy" label at bottom
+- "Attributes define properties" callout
+- "References include external USD files" note
+
+## Alt Text
+
+"USD scene structure hierarchy showing layers (top), prims in tree view (middle), and attributes defining properties of each prim. Demonstrates how /World root contains Ground, Robot, and Lighting prims with nested children and references to external USD files."
+
+## Creation Instructions
+
+Use Draw.io or Figma to create this hybrid diagram (layers + tree view) following the DIAGRAMS_README.md style guide. Consider using a split layout: layers horizontally stacked at top, tree hierarchy below.

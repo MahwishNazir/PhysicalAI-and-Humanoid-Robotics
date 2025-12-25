@@ -1,0 +1,66 @@
+# Diagram: Installation Workflow Flowchart
+
+**File**: installation-workflow.png
+**Type**: Flowchart
+**Purpose**: Decision tree for Isaac Sim installation on different platforms
+
+## Flow Structure
+
+**Start** → Check OS
+
+### Decision 1: Operating System
+- **Linux (Ubuntu 20.04/22.04)** → Path A
+- **Windows 10/11** → Path B
+- **macOS** → Error: Not supported
+
+### Path A: Linux Installation
+
+1. **Check NVIDIA Driver**
+   - nvidia-smi shows version ≥ 525? → Yes → Continue
+   - No → Install nvidia-driver-535 → Reboot → Continue
+
+2. **Download Omniverse Launcher**
+   - wget omniverse-launcher-linux.AppImage
+   - chmod +x, run launcher
+
+3. **Install Isaac Sim via Launcher**
+   - Exchange tab → Isaac Sim → Install
+   - ~15GB download
+
+4. **Verify Installation**
+   - Run: ~/.local/share/ov/pkg/isaac_sim-2023.1.0/isaac-sim.sh
+   - Success? → **Complete**
+   - Error? → Check logs, verify GPU
+
+### Path B: Windows Installation
+
+1. **Update NVIDIA Drivers**
+   - Download from nvidia.com/drivers
+   - Install → Reboot
+
+2. **Install Omniverse Launcher**
+   - Download .exe installer
+   - Run installation wizard
+
+3. **Install Isaac Sim**
+   - Launcher → Exchange → Isaac Sim → Install
+
+4. **Launch from Launcher**
+   - Success? → **Complete**
+   - Error? → Check GPU, disk space
+
+## Visual Style
+
+- Rounded rectangles for processes (blue #3498DB)
+- Diamonds for decisions (yellow #F39C12)
+- Green boxes for success (#27AE60)
+- Red boxes for errors (#E74C3C)
+- Arrows showing flow direction
+
+## Alt Text
+
+"Installation workflow flowchart showing decision points for Windows vs Linux, GPU driver checks, and step-by-step installation process for Isaac Sim"
+
+## Creation Instructions
+
+Use Draw.io or Lucidchart to create this flowchart following the DIAGRAMS_README.md style guide.
