@@ -1,0 +1,254 @@
+# Diagram: Sim-to-Real Transfer with Domain Randomization
+
+**File**: sim-to-real-transfer.png
+**Type**: Process flow and comparison diagram
+**Purpose**: Illustrate domain randomization technique and sim-to-real performance gap
+
+## Layout
+
+**Top Panel**: Training Process with Domain Randomization
+**Middle Panel**: Randomization Examples (Visual Comparison)
+**Bottom Panel**: Transfer Performance Analysis
+
+### Top Panel: Training and Transfer Pipeline
+
+```
+Sim-to-Real Transfer Pipeline:
+
+┌─────────────────────────────────────────────────────┐
+│         SIMULATION TRAINING                         │
+│                                                     │
+│  ┌──────────────┐         ┌──────────────┐         │
+│  │   Nominal    │         │   Domain     │         │
+│  │  Simulation  │    →    │ Randomized   │         │
+│  │  (Baseline)  │         │  Simulation  │         │
+│  └──────────────┘         └──────┬───────┘         │
+│                                  │                  │
+│       Parameters Randomized:     │                  │
+│       • Physics (mass ±30%)      │                  │
+│       • Appearance (textures)    │                  │
+│       • Sensors (noise)          │                  │
+│       • Lighting (position)      │                  │
+│                                  │                  │
+│                                  ↓                  │
+│                          ┌──────────────┐           │
+│                          │   Trained    │           │
+│                          │   Policy     │           │
+│                          │   Network    │           │
+│                          └──────┬───────┘           │
+└─────────────────────────────────┼───────────────────┘
+                                  │
+                                  ↓
+┌─────────────────────────────────┼───────────────────┐
+│          DEPLOYMENT                                  │
+│                                  ↓                  │
+│                          ┌──────────────┐           │
+│                          │  Real Robot  │           │
+│                          │  Execution   │           │
+│                          └──────────────┘           │
+│                                                     │
+│  Performance:                                       │
+│  • Sim success:   92%                               │
+│  • Real success:  79%                               │
+│  • Gap:           13% (acceptable)                  │
+└─────────────────────────────────────────────────────┘
+```
+
+**Without Domain Randomization** (comparison box):
+```
+No Randomization:
+  • Sim success:  95%
+  • Real success: 35%
+  • Gap:          60% (POOR - overfitting to sim)
+```
+
+### Middle Panel: Domain Randomization Examples
+
+**Show 2×3 grid of comparison images**:
+
+**Row 1: Physics Randomization**
+
+```
+┌────────────────┬────────────────┬────────────────┐
+│   Nominal      │  Light Object  │  Heavy Object  │
+│   Mass: 0.5kg  │  Mass: 0.35kg  │  Mass: 0.65kg  │
+│                │  (-30%)        │  (+30%)        │
+├────────────────┼────────────────┼────────────────┤
+│   [Robot       │   [Robot       │   [Robot       │
+│    grasping    │    grasping    │    grasping    │
+│    object]     │    object]     │    object]     │
+│                │                │                │
+│   Friction:    │   Friction:    │   Friction:    │
+│   0.6          │   0.3 (low)    │   0.9 (high)   │
+└────────────────┴────────────────┴────────────────┘
+```
+
+**Row 2: Visual Randomization**
+
+```
+┌────────────────┬────────────────┬────────────────┐
+│   Nominal      │   Texture      │   Lighting     │
+│   Lighting     │   Randomized   │   Randomized   │
+│                │                │                │
+├────────────────┼────────────────┼────────────────┤
+│   [Object:     │   [Object:     │   [Object:     │
+│    red box     │    wood        │    red box     │
+│    uniform     │    texture]    │    dark        │
+│    lighting]   │                │    shadow]     │
+│                │                │                │
+│   Default      │   Random from  │   Light pos:   │
+│   texture      │   100+ dataset │   randomized   │
+└────────────────┴────────────────┴────────────────┘
+```
+
+**Row 3: Sensor Randomization**
+
+```
+┌────────────────┬────────────────┬────────────────┐
+│   Nominal      │   Camera Noise │   Depth Noise  │
+│   (Perfect)    │   σ = 0.02     │   ±1% error    │
+│                │                │                │
+├────────────────┼────────────────┼────────────────┤
+│   [Clean RGB   │   [Noisy RGB   │   [Noisy       │
+│    image]      │    image with  │    depth map   │
+│                │    Gaussian    │    with        │
+│                │    noise]      │    artifacts]  │
+│                │                │                │
+│   No noise     │   Pixel noise  │   Distance-    │
+│                │   added        │   dependent    │
+└────────────────┴────────────────┴────────────────┘
+```
+
+**Annotations**:
+- "Training sees 1000s of variations"
+- "Policy learns robust features, not sim-specific artifacts"
+
+### Bottom Panel: Performance Analysis
+
+**Graph 1: Success Rate vs Domain Randomization Strength**
+
+```
+Success Rate (%)
+
+Real Robot:
+100│
+ 80│              ╱────────  ← Optimal range
+ 60│          ╱───
+ 40│      ╱───
+ 20│  ╱───
+  0│──┼────┼────┼────┼────┼───→
+    0   20   40   60   80  100  Randomization %
+
+Simulation:
+100│────────────────────────  ← Always high
+ 80│
+  0│──┼────┼────┼────┼────┼───→
+    0   20   40   60   80  100  Randomization %
+```
+
+**Key insight**: "Moderate randomization (40-60%) maximizes real-world performance without degrading sim performance"
+
+**Graph 2: Sim vs Real Performance Breakdown**
+
+```
+Task Success Breakdown:
+
+          Simulation    Real World
+Grasp:    ████████ 95%  ███████ 82%
+Lift:     ████████ 92%  ██████ 75%
+Place:    ████████ 90%  ██████ 73%
+Overall:  ████████ 92%  ██████ 79%
+
+Gap Analysis:
+  • Grasp gap:   13% (contact physics differences)
+  • Lift gap:    17% (mass estimation errors)
+  • Place gap:   17% (position control precision)
+```
+
+**Table: Domain Randomization Parameters**
+
+```
+┌─────────────────────┬──────────────┬──────────────┐
+│ Parameter           │ Nominal      │ Range        │
+├─────────────────────┼──────────────┼──────────────┤
+│ Object Mass         │ 0.5 kg       │ 0.35-0.65 kg │
+│ Friction Coeff      │ 0.6          │ 0.3-0.9      │
+│ Gravity             │ 9.81 m/s²    │ 9.31-10.31   │
+│ Camera Noise (σ)    │ 0.0          │ 0.0-0.02     │
+│ Depth Error         │ 0%           │ 0-1%         │
+│ Lighting Intensity  │ 1.0          │ 0.5-2.0      │
+│ Texture             │ Default      │ 100+ random  │
+│ Background          │ Static       │ 50+ scenes   │
+└─────────────────────┴──────────────┴──────────────┘
+```
+
+### Transfer Validation Process (Side Panel)
+
+```
+Validation Steps:
+
+1. Train in Sim with Randomization
+   ↓ 10k iterations
+
+2. Evaluate in Sim (no randomization)
+   ✓ 92% success on test set
+   ↓
+
+3. Deploy to Real Robot
+   → Run 100 trials
+   ↓
+
+4. Measure Real Performance
+   ✓ 79% success rate
+   ↓
+
+5. Analyze Failure Modes
+   • Contact failures: 12%
+   • Perception errors: 6%
+   • Motion planning: 3%
+   ↓
+
+6. Targeted Improvements
+   → Adjust randomization ranges
+   → Retrain policy
+   ↓
+
+7. Re-validate
+   ✓ 84% success (improved)
+```
+
+## Comparison Table: Transfer Techniques
+
+```
+┌──────────────────────┬─────────┬─────────┬─────────┐
+│ Technique            │ Sim→Real│ Training│ Hardware│
+│                      │   Gap   │  Time   │ Required│
+├──────────────────────┼─────────┼─────────┼─────────┤
+│ No Adaptation        │  60%    │  Fast   │  None   │
+│ Domain Randomization │  13%    │  Medium │  None   │
+│ System ID + Matching │  8%     │  Medium │  Real   │
+│ Residual Learning    │  5%     │  Slow   │  Real   │
+│ Direct Real Training │  0%     │  Very   │  Real   │
+│                      │         │  Slow   │  Only   │
+└──────────────────────┴─────────┴─────────┴─────────┘
+```
+
+**Recommendation**: "Domain randomization achieves best trade-off: 13% gap, no real hardware needed for training"
+
+## Color Scheme
+
+- Simulation: Blue (#3498DB)
+- Real world: Green (#27AE60)
+- Performance gap: Red (#E74C3C)
+- Randomization examples: Orange border (#E67E22)
+- Success bars: Green gradient (#27AE60 → #A9DFBF)
+- Failure regions: Red gradient (#E74C3C → #F5B7B1)
+- Process flow: Purple (#9B59B6)
+
+## Alt Text
+
+"Sim-to-real transfer diagram showing training pipeline with domain randomization (top: nominal simulation → domain randomized simulation with varied physics/appearance/sensors → trained policy → real robot deployment achieving 79% success vs 92% in sim for 13% gap), randomization examples (middle: 2×3 grid showing physics randomization with mass±30% and friction variation, visual randomization with textures and lighting, sensor randomization with camera and depth noise), and performance analysis (bottom: success rate vs randomization strength showing optimal 40-60% range, task breakdown comparing sim 92% to real 79%, validation process from training through failure analysis to improvement)."
+
+## Creation Instructions
+
+Use Draw.io with three-panel layout. Top panel shows pipeline flowchart with comparison box. Middle panel shows 2×3 grid of images (use placeholder rectangles with descriptive text). Bottom panel shows two line graphs side-by-side and comparison table. Add validation process as vertical flowchart in right margin. Use color coding to distinguish sim (blue) vs real (green). Follow DIAGRAMS_README.md typography and spacing guidelines.

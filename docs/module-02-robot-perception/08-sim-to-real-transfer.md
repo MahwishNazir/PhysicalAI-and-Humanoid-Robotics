@@ -139,4 +139,4 @@ Build an end-to-end project that:
 - Create complex environments for testing
 - Bridge the gap from simulation to reality
 
-**Next Module**: [Module 3: Robot Motion and Control](../module-03-motion-control/index.md) - Learn how to plan and execute robot movements!
+**Next Module**: [Module 3: The AI-Robot Brain (NVIDIA Isaac™)](../module-03-isaac-navigation/01-isaac-platform.md) - Learn advanced perception, training, and navigation with NVIDIA Isaac!

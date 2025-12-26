@@ -1,0 +1,141 @@
+# Diagram: Robot Spawn and Control Example
+
+**File**: robot-spawn-example.png
+**Type**: Code-to-visual mapping diagram
+**Purpose**: Illustrate the connection between Python API calls and resulting simulation state
+
+## Layout
+
+**Split view**: Left side shows code, right side shows visual result
+
+### Left Side: Code Sequence
+
+```python
+# 1. Create World
+world = World(physics_dt=1.0/60.0)
+
+# 2. Add Ground
+world.scene.add_default_ground_plane()
+
+# 3. Spawn Robot
+carter_path = "/World/Carter"
+add_reference_to_stage(
+    usd_path="carter_v1.usd",
+    prim_path=carter_path
+)
+
+# 4. Create Articulation
+carter = Articulation(
+    prim_path=carter_path
+)
+world.scene.add(carter)
+
+# 5. Initialize
+world.reset()
+
+# 6. Control Loop
+for i in range(300):
+    carter.set_joint_velocity_targets(
+        [5.0, 5.0]  # rad/s
+    )
+    world.step(render=True)
+```
+
+### Right Side: Visual State Progression
+
+**Stage 1** (After line 1-2):
+- Empty viewport with grid
+- Ground plane appears (gray)
+- Coordinate axes: X (red), Y (green), Z (blue)
+
+**Stage 2** (After line 3-5):
+- Carter robot appears at origin
+- Transparent bounding box showing collision geometry
+- Joint hierarchy visible in Stage panel
+
+**Stage 3** (After line 6):
+- Physics initialized
+- Robot settles onto ground (contact shadows)
+- Status: "Ready to simulate"
+
+**Stage 4** (During control loop):
+- Wheels rotating (motion blur lines)
+- Robot trajectory path (dashed line showing movement)
+- Position indicator updating: (0,0) → (3.4, 0)
+
+## Visual Elements
+
+**Code Side**:
+- Syntax-highlighted Python code
+- Line numbers 1-15
+- Annotations with arrows pointing to right side:
+  - Line 2 → "Ground appears"
+  - Line 5 → "Robot spawns"
+  - Line 10 → "Physics active"
+  - Line 14 → "Motion begins"
+
+**Visual Side**:
+- 4 viewport snapshots showing progression
+- Each snapshot 300x200px
+- Arranged vertically with time labels:
+  - t=0s (initialization)
+  - t=0s (spawn)
+  - t=0s (reset)
+  - t=1s, t=3s (motion)
+
+**Robot Detail Inset**:
+- Zoomed view of Carter robot showing:
+  - Base link (labeled)
+  - Left wheel, Right wheel (labeled)
+  - Articulation root indicator
+  - Local coordinate frame
+
+## Annotations
+
+- "USD Stage hierarchy" callout showing prim tree:
+  ```
+  /World
+  ├── GroundPlane
+  └── Carter (Articulation)
+      ├── base_link
+      ├── left_wheel (Revolute Joint)
+      └── right_wheel (Revolute Joint)
+  ```
+
+- "Control flow" arrows showing:
+  Code → API → USD Stage → PhysX → Rendering
+
+- "Key API calls" legend:
+  - Green boxes: Initialization
+  - Blue boxes: Configuration
+  - Orange boxes: Runtime control
+
+## Performance Metrics
+
+Small panel at bottom right:
+```
+Physics: 60 FPS (real-time)
+Rendering: 60 FPS
+Robots: 1
+Rigid Bodies: 3
+Joints: 2
+```
+
+## Color Scheme
+
+- Code background: Dark (#2C3E50)
+- Code syntax: Standard Python highlighting
+- Viewport: Light gray background (#ECF0F1)
+- Robot: NVIDIA Green (#76B900) with gray accents
+- Ground: Gray (#95A5A6)
+- Annotations: Blue (#3498DB)
+
+## Alt Text
+
+"Side-by-side diagram showing Python code on left and corresponding Isaac Sim viewport states on right. Demonstrates progression from empty world through robot spawn, initialization, and motion control. Includes Carter robot detail inset and USD stage hierarchy."
+
+## Creation Instructions
+
+Use Figma or Adobe Illustrator to create this split-view diagram. Left side can be a screenshot of syntax-highlighted code; right side requires 4 rendered or hand-drawn viewport states. Follow DIAGRAMS_README.md style guide for colors and typography.
+
+**Alternative**: Create as an animated GIF showing the progression (4 frames, 2s delay between frames).

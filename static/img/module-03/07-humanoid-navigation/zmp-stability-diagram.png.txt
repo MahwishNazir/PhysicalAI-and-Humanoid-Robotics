@@ -1,0 +1,116 @@
+# Diagram: ZMP Stability and Support Polygon
+
+**File**: zmp-stability-diagram.png
+**Type**: Technical illustration diagram
+**Purpose**: Visualize Zero Moment Point, support polygon, and stability criteria
+
+## Layout
+
+**Left Panel**: Single Support Phase
+**Right Panel**: Double Support Phase
+**Bottom**: Stability formula and criteria
+
+### Left Panel: Single Support (Unstable)
+
+```
+Side View:
+    COM ●
+     |  ↓ (gravity + inertia)
+     |
+    / \  Leg
+   /   \
+  -------  Foot
+  |-----|  Support polygon (small)
+    ✗ ZMP outside polygon
+```
+
+**Elements**:
+- Humanoid stick figure (side view)
+- COM marked at pelvis height (0.85m)
+- One foot on ground (stance leg)
+- Support polygon shown as foot outline (20cm × 10cm rectangle)
+- ZMP point shown outside polygon (red ✗)
+- Gravity vector (downward arrow from COM)
+- Ground reaction force (upward arrow at ZMP)
+
+### Right Panel: Double Support (Stable)
+
+```
+Front View:
+    COM ●
+     |
+    /|\
+   / | \  Both legs
+  /  |  \
+ L   R   Feet
+ |-------|  Support polygon (large)
+     ✓ ZMP inside polygon
+```
+
+**Elements**:
+- Humanoid stick figure (front view)
+- COM centered between feet
+- Both feet on ground
+- Support polygon connecting both feet (convex hull, 30cm × 50cm)
+- ZMP point shown inside polygon (green ✓)
+- Larger support area provides stability
+
+### Bottom Panel: ZMP Formula
+
+```
+ZMP Calculation:
+
+x_zmp = x_com - z_com × (a_x / (a_z + g))
+
+Where:
+  x_com = COM horizontal position
+  z_com = COM height above ground
+  a_x = COM horizontal acceleration
+  a_z = COM vertical acceleration
+  g = gravitational acceleration (9.81 m/s²)
+
+Stability Criterion:
+  ✓ Stable:   ZMP ∈ Support Polygon
+  ✗ Unstable: ZMP ∉ Support Polygon
+```
+
+## Annotations
+
+**Single Support Panel**:
+- "Small support polygon"
+- "Limited stability margin"
+- "ZMP easily exits bounds"
+
+**Double Support Panel**:
+- "Large support polygon"
+- "High stability margin"
+- "ZMP well-constrained"
+
+**Arrow showing transition**:
+"Walking alternates between single/double support phases"
+
+## Visual Details
+
+- Support polygons: Hatched green (stable) or red (unstable) regions
+- ZMP point: Marked with ◉ symbol
+- COM: Larger filled circle ●
+- Ground plane: Gray horizontal line
+- Force vectors: Thick arrows (gravity = red, ground reaction = blue)
+
+## Color Scheme
+
+- COM: Orange (#F39C12)
+- ZMP stable: Green (#27AE60)
+- ZMP unstable: Red (#E74C3C)
+- Support polygon stable: Light green fill (#A9DFBF)
+- Support polygon unstable: Light red fill (#F5B7B1)
+- Robot: Gray (#95A5A6)
+- Ground: Dark gray (#34495E)
+
+## Alt Text
+
+"ZMP stability diagram comparing single support phase (left: small foot-sized support polygon, ZMP outside bounds showing instability) with double support phase (right: large support polygon spanning both feet, ZMP safely inside bounds). Bottom shows ZMP calculation formula relating COM position/acceleration to ground contact point."
+
+## Creation Instructions
+
+Use Draw.io with two side-by-side panels plus formula panel at bottom. Draw stick figures showing COM and legs. Create support polygons as closed shapes with hatching. Mark ZMP with circle marker. Add force vectors as arrows. Follow DIAGRAMS_README.md style guide for colors and typography.

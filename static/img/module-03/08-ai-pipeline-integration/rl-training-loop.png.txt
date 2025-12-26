@@ -1,0 +1,245 @@
+# Diagram: Reinforcement Learning Training Loop with Isaac Gym
+
+**File**: rl-training-loop.png
+**Type**: Algorithm flow diagram with parallel execution visualization
+**Purpose**: Show RL training process with massively parallel simulation
+
+## Layout
+
+**Left Panel**: RL Training Loop
+**Center Panel**: Isaac Gym Parallel Execution
+**Right Panel**: Learning Curve and Metrics
+
+### Left Panel: RL Training Loop
+
+```
+Training Loop (Single Environment):
+
+     ┌──────────────────┐
+     │  Environment     │
+     │  State: s_t      │
+     └────────┬─────────┘
+              ↓
+     ┌──────────────────┐
+     │  Policy Network  │
+     │  π(a|s)          │
+     └────────┬─────────┘
+              ↓
+     ┌──────────────────┐
+     │  Action: a_t     │
+     └────────┬─────────┘
+              ↓
+     ┌──────────────────┐
+     │  Step Env        │
+     │  s_t → s_{t+1}   │
+     └────────┬─────────┘
+              ↓
+     ┌──────────────────┐
+     │  Reward: r_t     │
+     │  Done: d_t       │
+     └────────┬─────────┘
+              ↓
+     ┌──────────────────┐
+     │  Store Transition│
+     │  (s,a,r,s',d)    │
+     └────────┬─────────┘
+              ↓
+     ┌──────────────────┐
+     │  Policy Update   │
+     │  ∇_θ J(θ)        │
+     └────────┬─────────┘
+              ↓
+         (repeat)
+```
+
+**Component Details**:
+
+**State** (box with robot icon):
+- Joint positions (n DOF)
+- Joint velocities (n DOF)
+- Object pose (7D: position + quaternion)
+- Goal position (3D)
+- Total: ~64-dimensional observation
+
+**Policy Network** (neural network icon):
+- Input: 64D observation
+- Hidden: 256 → 256 (ReLU)
+- Output: 7D action (joint velocities)
+- Activation: Tanh (bounded actions)
+
+**Reward** (box with formula):
+```
+r_t = -‖hand - object‖ + 10·grasp_success
+```
+
+**Policy Update** (box with gradient):
+- Algorithm: PPO (Proximal Policy Optimization)
+- Batch size: 4096 transitions
+- Learning rate: 3e-4
+- Clip ratio: 0.2
+
+### Center Panel: Isaac Gym Parallel Execution
+
+```
+Massively Parallel Simulation (1024 Environments):
+
+GPU Memory Layout:
+
+┌───────────────────────────────────────┐
+│         GPU Memory (8GB)              │
+├───────────────────────────────────────┤
+│  Environment States (1024 × 64)      │  ← Observations
+│  [env0, env1, ..., env1023]          │
+├───────────────────────────────────────┤
+│  Actions (1024 × 7)                   │  ← Policy outputs
+│  [a0, a1, ..., a1023]                 │
+├───────────────────────────────────────┤
+│  Rewards (1024)                       │  ← Computed rewards
+│  [r0, r1, ..., r1023]                 │
+├───────────────────────────────────────┤
+│  Policy Network Weights               │  ← Shared across envs
+│  (256K parameters)                    │
+└───────────────────────────────────────┘
+
+Execution Flow:
+
+Step 1: Batch Observation Collection
+  All 1024 envs → GPU tensor [1024, 64]
+  Time: <1ms (parallel read)
+
+Step 2: Policy Forward Pass (Batched)
+  Input: [1024, 64]
+  Output: [1024, 7] actions
+  Time: 5ms (GPU inference)
+
+Step 3: Parallel Physics Simulation
+  All 1024 envs step simultaneously
+  PhysX GPU kernel
+  Time: 8ms per step
+
+Step 4: Batch Reward Computation
+  Parallel evaluation on GPU
+  Time: 2ms
+
+Total: 16ms per iteration → 60 Hz training
+```
+
+**Visual**: Show grid of 32×32 small environment thumbnails, all executing simultaneously
+
+**Annotations**:
+- "1024 robots train in parallel"
+- "Single GPU handles all environments"
+- "10,000 robot-hours in 10 wall-clock hours"
+
+### Right Panel: Learning Curve
+
+**Plot 1: Average Reward vs Iterations**
+
+```
+Reward
+  10 │                          ╱─────
+     │                      ╱───
+   5 │                  ╱───
+     │              ╱───
+   0 │          ╱───
+     │      ╱───
+  -5 │  ╱───
+     │──┼────┼────┼────┼────┼───→
+       0   2k  4k  6k  8k  10k  Iterations
+```
+
+**Key milestones** (annotated on curve):
+- Iteration 0: Random policy, avg reward = -8
+- Iteration 2k: Learns to approach object, avg reward = -2
+- Iteration 4k: First successful grasps, avg reward = 0
+- Iteration 6k: Consistent grasping, avg reward = 5
+- Iteration 10k: Near-optimal, avg reward = 9.2
+
+**Plot 2: Success Rate vs Iterations**
+
+```
+Success %
+ 100│                          ────
+  80│                      ╱───
+  60│                  ╱───
+  40│              ╱───
+  20│          ╱───
+   0│──────────
+     │──┼────┼────┼────┼────┼───→
+       0   2k  4k  6k  8k  10k  Iterations
+```
+
+**Plot 3: Training Speedup (Bar Chart)**
+
+```
+Speedup vs Single Environment:
+
+1 env:     ▁ 1×
+10 envs:   ███ 9×
+100 envs:  ███████████████ 85×
+1024 envs: ████████████████████████████ 950×
+
+Wall-clock time for 10k iterations:
+  Single:  28 hours
+  1024×:   1.8 minutes
+```
+
+## Performance Comparison Table
+
+```
+Training Configuration Comparison:
+
+┌──────────────┬──────────┬──────────┬──────────┐
+│ # Envs       │   1      │   100    │  1024    │
+├──────────────┼──────────┼──────────┼──────────┤
+│ GPU Memory   │  1.2 GB  │  3.5 GB  │  7.8 GB  │
+│ Samples/sec  │  60      │  5,400   │  57,000  │
+│ Time to 90%  │  28 hrs  │  18 min  │  1.8 min │
+│ Speedup      │  1×      │  93×     │  933×    │
+└──────────────┴──────────┴──────────┴──────────┘
+```
+
+## Algorithm Pseudocode (Bottom Box)
+
+```python
+# PPO Training with Isaac Gym
+
+for iteration in range(10000):
+    # Collect rollouts from all environments
+    for step in range(rollout_length):
+        observations = gym.get_observations()  # [1024, 64]
+        actions = policy(observations)         # [1024, 7]
+        gym.step(actions)                      # Parallel physics
+        rewards = gym.get_rewards()            # [1024]
+        store_transition(obs, actions, rewards)
+
+    # Policy update
+    advantages = compute_advantages(rewards)
+    for epoch in range(ppo_epochs):
+        policy_loss = compute_ppo_loss(advantages)
+        optimizer.step(policy_loss)
+
+    # Log metrics
+    if iteration % 100 == 0:
+        avg_reward = rewards.mean()
+        print(f"Iter {iteration}: Reward = {avg_reward:.2f}")
+```
+
+## Color Scheme
+
+- Environment states: Green (#27AE60)
+- Policy network: Blue (#3498DB)
+- Actions: Orange (#E67E22)
+- Rewards: Yellow (#F39C12)
+- GPU components: Purple (#9B59B6)
+- Learning curve: Blue line (#3498DB)
+- Success rate: Green line (#27AE60)
+- Speedup bars: Gradient (light to dark blue)
+
+## Alt Text
+
+"Reinforcement learning training loop showing single-environment cycle (left: state → policy → action → environment step → reward → policy update), Isaac Gym massively parallel execution (center: 1024 environments on single GPU with batched policy inference and parallel physics simulation achieving 60Hz training), and learning curves (right: average reward increasing from -8 to +9.2 over 10k iterations, success rate reaching 92%, training speedup comparison showing 1024 parallel environments achieve 933× speedup versus single environment completing 10k iterations in 1.8 minutes vs 28 hours)."
+
+## Creation Instructions
+
+Use Draw.io with three-panel layout. Left panel shows vertical flowchart of RL loop with labeled boxes. Center panel shows GPU memory layout as stacked rectangles and execution timeline. Right panel shows line plots for learning curves and bar chart for speedup. Add pseudocode box at bottom spanning full width. Follow DIAGRAMS_README.md style for colors and typography.

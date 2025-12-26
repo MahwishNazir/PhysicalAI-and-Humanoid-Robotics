@@ -1,0 +1,213 @@
+# Diagram: Pose Graph Optimization
+
+**File**: pose-graph-optimization.png
+**Type**: Graph visualization + mathematical explanation
+**Purpose**: Show pose graph structure and optimization process
+
+## Layout
+
+**Left Panel**: Graph Structure
+**Right Panel**: Optimization Process
+**Bottom**: Mathematical Formulation
+
+### Left Panel: Pose Graph Structure
+
+**Graph Visualization** (10 nodes example):
+
+```
+Visual representation:
+
+       T₁ ───→ T₂ ───→ T₃
+        ↓       ↓       ↓
+       T₄ ←─── T₅ ←─── T₆
+        ↓               ↑
+       T₇ ───→ T₈ ───→ T₉
+                        ↑
+                       T₁₀
+```
+
+**Node Details** (call-out boxes):
+```
+Node: Camera Pose Tᵢ
+┌─────────────────────┐
+│ Position: (x, y, z) │
+│ Rotation: (r, p, y) │
+│ Timestamp: tᵢ       │
+└─────────────────────┘
+
+Total DOF = 6N
+(N = number of poses)
+```
+
+**Edge Details**:
+```
+Odometry Edge (blue):
+├─ Consecutive poses: Tᵢ → Tᵢ₊₁
+├─ Measurement: ΔTᵢ (relative pose)
+├─ Covariance: Σᵢ (uncertainty)
+└─ Information: Ωᵢ = Σᵢ⁻¹
+
+Loop Closure Edge (green):
+├─ Non-consecutive: Tᵢ → Tⱼ (j >> i+1)
+├─ Measurement: ΔT_loop
+├─ Typically higher uncertainty
+└─ Corrects accumulated drift
+```
+
+**Example Values**:
+```
+Odometry edge:
+  Δx = 0.5m, Δy = 0.0m
+  σ_x = 0.02m, σ_θ = 0.01rad
+
+Loop closure edge:
+  Δx = 0.1m, Δy = 0.05m
+  σ_x = 0.10m, σ_θ = 0.05rad
+  (higher uncertainty)
+```
+
+### Right Panel: Optimization Process
+
+**Before Optimization**:
+```
+[3D trajectory visualization]
+
+Shows:
+- 50 camera poses (small coordinate frames)
+- Blue edges (odometry)
+- 2 green edges (loop closures)
+- Red overlay: "Constraint violations"
+
+Violations highlighted:
+• Loop 1: 1.2m gap (should be <0.1m)
+• Loop 2: 0.8m gap (should be <0.1m)
+
+Total error: 2.5m² (sum of squared errors)
+```
+
+**Optimization Arrow**:
+```
+        ↓ Levenberg-Marquardt
+        ↓ 20 iterations
+        ↓ Converged: δ < 10⁻⁶
+```
+
+**After Optimization**:
+```
+[Same 3D trajectory, adjusted]
+
+Shows:
+- Same 50 poses, slightly moved
+- All constraints satisfied
+- Green overlay: "Globally consistent"
+
+Residuals:
+• Loop 1: 0.03m gap ✓
+• Loop 2: 0.02m gap ✓
+
+Total error: 0.04m² (98.4% reduction)
+```
+
+**Convergence Plot** (inset):
+```
+Error vs Iteration
+   │
+3.0│●
+   │ ●
+2.0│  ●
+   │    ●●
+1.0│       ●●●
+   │          ●●●●●●
+0.0│________________●●●●
+    0    5    10   15   20
+         Iteration
+```
+
+### Bottom Panel: Mathematical Formulation
+
+**Objective Function**:
+```
+minimize  F(T₁, ..., Tₙ) = Σᵢⱼ eᵢⱼᵀ Ωᵢⱼ eᵢⱼ
+
+where:
+  eᵢⱼ = error between measured and predicted relative pose
+  eᵢⱼ = ΔTᵢⱼ_measured ⊖ (Tⱼ ⊖ Tᵢ)
+  Ωᵢⱼ = information matrix (inverse covariance)
+  ⊖ = SE(3) inverse composition
+```
+
+**Linearization** (for Gauss-Newton):
+```
+eᵢⱼ(T + δ) ≈ eᵢⱼ(T) + Jᵢⱼ δ
+
+where:
+  Jᵢⱼ = Jacobian of error w.r.t. poses
+  δ = increment to poses
+
+Linear system:
+  Hδ = -b
+
+where:
+  H = Σᵢⱼ JᵢⱼᵀΩᵢⱼJᵢⱼ (Hessian approximation)
+  b = Σᵢⱼ JᵢⱼᵀΩᵢⱼeᵢⱼ (gradient)
+```
+
+**Sparsity Pattern** (H matrix):
+```
+Visual: 50x50 sparse matrix
+
+  1 2 3 ... 48 49 50
+1 ■ ■ □ ... □  □  □
+2 ■ ■ ■ ... □  □  □
+3 □ ■ ■ ... □  □  □
+  ⋮         ⋱
+48 □ □ □ ... ■  ■  □
+49 □ □ □ ... ■  ■  ■
+50 ■ □ □ ... □  ■  ■
+
+■ = non-zero block (6x6)
+□ = zero block
+
+Sparsity: 98% (only adjacent poses connected)
+→ Enables efficient solving (Cholesky factorization)
+```
+
+## Performance Metrics
+
+**Complexity**:
+- Nodes: N poses
+- Edges: M constraints
+- DOF: 6N (position + orientation per pose)
+- Non-zeros in H: O(M) (sparse)
+- Solve time: O(N) for chain graphs, O(N³) worst case
+
+**Typical Values**:
+- N = 1,000 poses
+- M = 1,050 edges (1,000 odometry + 50 loop closures)
+- Solve time: 200ms (Cholesky)
+- Iterations to converge: 10-30
+
+## Color Scheme
+
+- Odometry edges: Blue (#3498DB)
+- Loop closure edges: Green (#27AE60)
+- Error/violation: Red (#E74C3C)
+- Optimized result: Green (#2ECC71)
+- Mathematical notation: Black on white
+
+## Callouts
+
+- "Sparse structure enables real-time optimization"
+- "Each loop closure affects 100+ poses"
+- "Quadratic convergence near minimum"
+- "Global consistency from local constraints"
+
+## Alt Text
+
+"Pose graph optimization diagram showing graph structure (left: nodes as camera poses, edges as odometry and loop closure constraints), optimization process (right: before/after comparison with constraint violations corrected), and mathematical formulation (bottom: objective function, linearization, and sparse Hessian matrix visualization)"
+
+## Creation Instructions
+
+Use Draw.io or Graphviz for graph visualization. Before/after 3D trajectories can be generated from actual SLAM output. Mathematical notation should use LaTeX rendering. Sparse matrix visualization can be created with matplotlib spy plot. Follow DIAGRAMS_README.md style guide for consistent formatting.
+
+**Technical Detail**: Show realistic pose graph from ORB-SLAM3 output (50-100 nodes) to illustrate actual complexity.

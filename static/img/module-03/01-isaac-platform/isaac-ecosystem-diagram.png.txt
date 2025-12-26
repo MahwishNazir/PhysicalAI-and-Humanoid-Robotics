@@ -1,0 +1,54 @@
+# Diagram: Isaac Ecosystem Architecture
+
+**File**: isaac-ecosystem-diagram.png
+**Type**: Architecture diagram
+**Purpose**: Show relationships between Isaac Sim, Omniverse, USD, Isaac ROS, and physical robots
+
+## Visual Elements
+
+Central component: **Isaac Sim** (green box, #76B900)
+
+Connected components:
+1. **Omniverse Platform** (top, blue #3498DB)
+   - Nucleus (cloud storage)
+   - Connectors (Blender, Maya, Unreal)
+   - Collaboration tools
+
+2. **USD Format** (left, gray #95A5A6)
+   - .usd files
+   - Layers, Prims, Attributes
+   - Composition arcs
+
+3. **Isaac ROS** (right, dark blue #2C3E50)
+   - Perception packages
+   - Navigation packages
+   - GPU-accelerated
+
+4. **Physical Robots** (bottom)
+   - Boston Dynamics Spot
+   - Tesla Optimus
+   - Custom robots
+
+## Arrows (Data Flow)
+
+- Isaac Sim ← → Omniverse (bidirectional, real-time sync)
+- Isaac Sim → USD (exports scenes)
+- USD → Isaac Sim (imports assets)
+- Isaac Sim → Isaac ROS (simulation data)
+- Isaac ROS → Physical Robots (deployment)
+- Physical Robots → Isaac Sim (sim-to-real validation loop)
+
+## Color Scheme
+
+- NVIDIA Green (#76B900): Isaac Sim components
+- Blue (#3498DB): Omniverse platform
+- Gray (#95A5A6): USD data formats
+- Dark Blue (#2C3E50): ROS 2 / robot control systems
+
+## Alt Text
+
+"Isaac Sim ecosystem architecture showing relationships between Isaac Sim (center), Omniverse platform (top), USD format (left), Isaac ROS packages (right), and physical robot deployment (bottom)"
+
+## Creation Instructions
+
+Use Draw.io or Figma to create this diagram following the DIAGRAMS_README.md style guide.

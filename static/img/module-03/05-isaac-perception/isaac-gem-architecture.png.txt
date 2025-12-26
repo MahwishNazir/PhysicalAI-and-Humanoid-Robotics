@@ -1,0 +1,108 @@
+# Diagram: Isaac GEM Architecture
+
+**File**: isaac-gem-architecture.png
+**Type**: System architecture diagram
+**Purpose**: Show Isaac GEM graph execution model and GPU pipeline
+
+## Layout
+
+**Top**: Perception Graph (nodes and edges)
+**Middle**: GEM Execution Engine
+**Bottom**: Hardware (GPU/CPU)
+
+### Top Panel: Perception Graph
+
+```
+Computational Graph:
+
+[Camera] → [Rectification] → [DOPE] → [Pose Filter] → [Controller]
+    ↓          ↓                ↓          ↓              ↓
+   RGB     Rectified RGB    Belief Maps  Poses(6-DOF)  Commands
+```
+
+**Node Details** (callout boxes):
+- Camera: 30 Hz RGB capture
+- Rectification: Lens distortion correction
+- DOPE: CNN inference (TensorRT)
+- Pose Filter: RANSAC outlier removal
+- Controller: Grasp planning
+
+### Middle Panel: GEM Execution Engine
+
+**Components**:
+
+1. **Scheduler**
+   - Dependency-based execution
+   - Concurrent node execution
+   - GPU kernel launch optimization
+
+2. **Memory Manager**
+   - Zero-copy GPU buffers
+   - Shared memory pools
+   - Automatic garbage collection
+
+3. **Data Flow**
+   - CUDA streams for parallelism
+   - Producer-consumer queues
+   - Backpressure handling
+
+### Bottom Panel: Hardware Mapping
+
+**GPU (NVIDIA RTX)**:
+```
+┌─────────────────────────────┐
+│ GPU Memory (8GB)            │
+├─────────────────────────────┤
+│ Stream 0: Camera → Rectify  │
+│ Stream 1: DOPE Inference    │
+│ Stream 2: Post-processing   │
+└─────────────────────────────┘
+```
+
+**CPU**:
+- Graph construction
+- Scheduling decisions
+- Result handling
+
+## Data Flow Example
+
+**Timeline visualization**:
+
+```
+Time →
+0ms:   [Camera Capture]
+5ms:   [Rectification] (GPU)
+10ms:  [DOPE Inference] (GPU) ← Longest operation
+35ms:  [Pose Filter] (CPU)
+38ms:  [Controller] (CPU)
+40ms:  Output ready (25 FPS)
+```
+
+## Performance Metrics
+
+**Without GEM** (naive PyTorch):
+- Sequential execution
+- CPU-GPU transfers
+- Throughput: 8-12 FPS
+
+**With GEM** (optimized):
+- Concurrent execution
+- Zero-copy memory
+- Throughput: 30-60 FPS
+
+**Speedup**: 3-5x
+
+## Color Scheme
+
+- Nodes: Blue (#3498DB)
+- Data flow: Green (#27AE60)
+- GPU operations: Orange (#F39C12)
+- CPU operations: Gray (#95A5A6)
+
+## Alt Text
+
+"Isaac GEM architecture showing perception graph (top: nodes for camera, rectification, DOPE, filtering, control), GEM execution engine (middle: scheduler, memory manager, data flow), and hardware mapping (bottom: GPU streams and CPU coordination). Demonstrates zero-copy GPU pipeline achieving 30-60 FPS."
+
+## Creation Instructions
+
+Use Draw.io with three horizontal panels. Top panel shows node graph with data flow arrows. Middle panel shows GEM components as boxes. Bottom shows GPU/CPU split with timeline. Follow DIAGRAMS_README.md style guide.

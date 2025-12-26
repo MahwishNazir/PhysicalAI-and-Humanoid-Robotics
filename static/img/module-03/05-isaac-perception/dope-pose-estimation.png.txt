@@ -1,0 +1,12 @@
+# Diagram: DOPE Pose Estimation Pipeline
+**File**: dope-pose-estimation.png
+**Type**: Technical pipeline diagram
+**Purpose**: Illustrate DOPE inference from RGB to 6-DOF pose
+
+## Pipeline Stages
+1. RGB Image (640x480) → 2. CNN Encoder → 3. Belief Maps (8 keypoints) → 4. Peak Detection → 5. PnP Solver → 6. 6-DOF Pose
+
+Visual: Show image transformations at each stage with example box object
+
+## Alt Text
+"DOPE pipeline: RGB image through CNN encoder producing belief maps for 8 object keypoints, peak detection extracts 2D locations, PnP solver recovers 6-DOF pose (position + orientation quaternion)"

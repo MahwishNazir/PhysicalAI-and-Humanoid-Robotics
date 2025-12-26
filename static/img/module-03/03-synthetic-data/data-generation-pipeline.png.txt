@@ -1,0 +1,134 @@
+# Diagram: Synthetic Data Generation Pipeline
+
+**File**: data-generation-pipeline.png
+**Type**: Flow diagram / Data pipeline
+**Purpose**: Visualize end-to-end synthetic data generation workflow in Isaac Sim
+
+## Pipeline Stages
+
+**Stage 1: Scene Setup**
+```
+Input: USD assets, robot models
+↓
+Actions:
+- Load environment (warehouse, outdoor, lab)
+- Spawn objects (randomized)
+- Position cameras/sensors
+↓
+Output: Initial scene graph
+```
+
+**Stage 2: Randomization**
+```
+Input: Scene graph + randomization parameters
+↓
+Actions:
+- Lighting: Intensity (200-3000 lux), color temp
+- Textures: PBR materials from library
+- Poses: Object positions, camera viewpoints
+- Physics: Mass, friction variations
+↓
+Output: Randomized scene instance
+```
+
+**Stage 3: Simulation & Rendering**
+```
+Input: Randomized scene
+↓
+Actions:
+- Step physics (settle objects)
+- Render RGB (raytracing/rasterization)
+- Render depth (distance map)
+- Render semantic (class IDs)
+- Render instance (object IDs)
+↓
+Output: Multi-modal sensor data
+```
+
+**Stage 4: Annotation Extraction**
+```
+Input: Rendered sensor data
+↓
+Actions:
+- Bounding boxes from instance masks
+- Polygon masks from segmentation
+- 3D bounding boxes from depth
+- Point cloud labeling from lidar
+↓
+Output: Ground truth annotations
+```
+
+**Stage 5: Quality Validation**
+```
+Input: Image + annotations
+↓
+Checks:
+- Object count > threshold
+- Object size > minimum pixels
+- Brightness in valid range
+- No annotation errors
+↓
+Output: Pass/Fail decision
+```
+
+**Stage 6: Export**
+```
+Input: Validated samples
+↓
+Format conversion:
+- COCO JSON (detection/segmentation)
+- KITTI (3D detection, odometry)
+- TFRecord (TensorFlow)
+- Custom formats
+↓
+Output: Training-ready dataset
+```
+
+## Visual Elements
+
+**Flow Style**:
+- Boxes for stages (rounded rectangles)
+- Arrows showing data flow
+- Color coding:
+  - Input/Output: Gray (#95A5A6)
+  - Processing: Blue (#3498DB)
+  - Randomization: Orange (#F39C12)
+  - Validation: Yellow (#F1C40F)
+  - Export: Green (#27AE60)
+
+**Side Panels**:
+- Left: "Replicator API" integration points
+- Right: Performance metrics:
+  - "100-1000 samples/hour"
+  - "Headless mode: 3-5x faster"
+  - "Multi-GPU: linear scaling"
+
+**Example Data Flow**:
+Show one sample flowing through pipeline with thumbnails:
+- Stage 1: Wireframe scene
+- Stage 2: Textured scene
+- Stage 3: RGB image
+- Stage 4: Annotated image (bboxes overlaid)
+- Stage 5: ✓ Pass checkmark
+- Stage 6: JSON file icon
+
+## Annotations
+
+- "Parallel execution" note on Stages 2-4
+- "1000x faster than real-world data collection" callout
+- "Perfect labels, zero annotation cost" benefit highlight
+
+## Color Scheme
+
+- NVIDIA Green (#76B900): Isaac Sim components
+- Blue (#3498DB): Data processing stages
+- Orange (#F39C12): Randomization
+- Gray (#95A5A6): Input/output data
+
+## Alt Text
+
+"Synthetic data generation pipeline showing six stages: scene setup, randomization, simulation/rendering, annotation extraction, quality validation, and export to training-ready formats like COCO and KITTI"
+
+## Creation Instructions
+
+Use Draw.io or Lucidchart to create this vertical flow diagram following the DIAGRAMS_README.md style guide. Include example thumbnails showing data transformation at each stage.

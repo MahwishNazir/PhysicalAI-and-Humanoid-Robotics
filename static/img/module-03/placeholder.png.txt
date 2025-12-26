@@ -1,0 +1,23 @@
+# Diagram Placeholder Template
+
+This is a placeholder for diagram files. Replace this with actual PNG/SVG diagrams.
+
+## Diagram Creation Guidelines
+
+1. **Tools**: Use Draw.io, Mermaid, or similar vector graphics tools
+2. **Format**: Save as PNG or SVG (vector format preferred)
+3. **Size**: Minimum 800px width for clarity
+4. **Style**: Follow DIAGRAMS_README.md for consistent colors, fonts, and layout
+
+## Naming Convention
+
+- Use descriptive names: `isaac-ecosystem-diagram.png`, `installation-workflow.png`
+- Include chapter prefix if ambiguous
+- Use lowercase with hyphens
+
+## Alt Text
+
+Always provide descriptive alt text when referencing in markdown:
+```markdown
+![Isaac Sim ecosystem architecture showing relationships between Isaac Sim, Omniverse, USD, and ROS 2](./isaac-ecosystem-diagram.png)
+```
