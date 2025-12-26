@@ -1,0 +1,21 @@
+# Docusaurus Ignore File
+# Files and directories listed here will not be processed by Docusaurus
+
+# Temporarily ignore module-04 (untracked/incomplete - will be added in separate feature)
+module-04-vla-multimodal/**
+
+# Ignore all solution directories (contain code examples, not documentation pages)
+**/solutions/**
+
+# Ignore solution code files
+**/*.py
+**/*.launch.py
+**/*.sdf
+**/*.urdf
+**/*.yaml
+
+# Ignore test files
+**/test/**
+
+# Ignore README files in solutions (if any)
+**/solutions/**/README.md
