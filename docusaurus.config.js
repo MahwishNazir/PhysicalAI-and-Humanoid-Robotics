@@ -10,7 +10,7 @@ const config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://mahwishnazir.github.io',
-  baseUrl: '/',
+  baseUrl: '/PhysicalAI-and-Humanoid-Robotics/',
 
   organizationName: 'MahwishNazir',
   projectName: 'PhysicalAI-and-Humanoid-Robotics',
