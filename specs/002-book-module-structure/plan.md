@@ -3,6 +3,8 @@
 **Branch**: `002-book-module-structure` | **Date**: 2025-12-04 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/002-book-module-structure/spec.md`
 
+> **Historical Note (2025-12-26)**: This plan references `module-03-motion-control` and `module-04-humanoid-integration`, which were later replaced by `module-03-isaac-navigation` and `module-04-vla-multimodal`. References below reflect original planning.
+
 **Note**: This template is filled in by the `/sp.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
 
 ## Summary

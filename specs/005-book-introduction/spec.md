@@ -2,8 +2,11 @@
 
 **Feature Branch**: `005-book-introduction`
 **Created**: 2025-12-06
+**Last Updated**: 2025-12-26 (Historical Note Added)
 **Status**: Draft
 **Input**: User description: "you are an Author/writer therefore write an Introduction of of the book "Physical AI and Humanoid Robotis" in the "Introduction" that is helpful for understanding the content of the book, how long it take to learn/understand and some other material that fit suitable."
+
+> **Historical Note (2025-12-26)**: This spec references `module-03-motion-control` and `module-04-humanoid-integration`, which were later replaced by `module-03-isaac-navigation` and `module-04-vla-multimodal`.
 
 ## User Scenarios & Testing *(mandatory)*
 

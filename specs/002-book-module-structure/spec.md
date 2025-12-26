@@ -3,8 +3,10 @@
 **Feature ID**: 002-book-module-structure
 **Status**: Draft
 **Created**: 2025-12-04
-**Last Updated**: 2025-12-04
+**Last Updated**: 2025-12-26 (Historical Note Added)
 **Owner**: User
+
+> **Historical Note (2025-12-26)**: This specification contains references to `module-03-motion-control` and `module-04-humanoid-integration`, which were the original Module 3 and Module 4 implementations. These were later replaced by `module-03-isaac-navigation` and `module-04-vla-multimodal` for more comprehensive content. The references below reflect the original planning.
 
 ## Overview
 
