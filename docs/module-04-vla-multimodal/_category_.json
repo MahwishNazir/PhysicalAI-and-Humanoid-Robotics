@@ -1,0 +1,12 @@
+{
+  "label": "Module 4: Vision-Language-Action (VLA)",
+  "position": 4,
+  "collapsible": true,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "title": "Module 4: Vision-Language-Action (VLA)",
+    "description": "Explore the convergence of Large Language Models and robotics through voice commands, cognitive planning, and autonomous systems."
+  },
+  "description": "Explore the convergence of Large Language Models and robotics through voice commands, cognitive planning, and autonomous systems."
+}

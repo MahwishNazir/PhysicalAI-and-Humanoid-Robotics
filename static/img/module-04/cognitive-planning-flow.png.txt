@@ -1,0 +1,220 @@
+# Diagram Specification: Cognitive Planning Flow
+
+**Filename**: cognitive-planning-flow.png
+**Size**: 1200x1400px
+**Format**: PNG (vertical flowchart)
+**Purpose**: Show LLM-based cognitive planning decision flow for Chapter 3
+
+## Content Layout
+
+### Title (top center)
+"Cognitive Planning with LLMs - Task Decomposition Flow"
+
+### Flowchart Structure (top to bottom)
+
+**Node 1: Start**
+- Shape: Rounded rectangle (stadium)
+- Background: Light green (#C8E6C9)
+- Icon: Play button
+- Text: "Receive Natural Language Command"
+- Example: "Pick up the red cup from the table"
+- Size: 300x80px
+
+↓ (Arrow with label: "User input")
+
+**Node 2: Prompt Construction**
+- Shape: Rectangle
+- Background: Light blue (#BBDEFB)
+- Icon: Document
+- Text: "Build LLM Prompt"
+- Sub-bullets:
+  - "System prompt (role + constraints)"
+  - "Few-shot examples"
+  - "User command"
+  - "Output format (JSON)"
+- Size: 300x120px
+
+↓ (Arrow with label: "Prompt")
+
+**Node 3: LLM Processing**
+- Shape: Hexagon
+- Background: Light purple (#E1BEE7)
+- Icon: Brain/AI
+- Text: "LLM Task Decomposition"
+- Details: "GPT-4, temperature=0.0"
+- Size: 300x100px
+
+↓ (Arrow with label: "Raw response")
+
+**Decision Diamond 1: Valid JSON?**
+- Shape: Diamond
+- Background: Light yellow (#FFF9C4)
+- Text: "Is response valid JSON?"
+- Size: 250x150px
+- Two exit arrows:
+  - YES → Continue down
+  - NO → Right to Error Handler
+
+**Node 4: Parse JSON**
+- Shape: Rectangle
+- Background: Light cyan (#B2EBF2)
+- Text: "Parse Action Sequence"
+- Details:
+  - "Extract plan array"
+  - "Validate structure"
+  - "Check required fields"
+- Size: 300x100px
+
+↓ (Arrow with label: "Parsed plan")
+
+**Decision Diamond 2: Valid Actions?**
+- Shape: Diamond
+- Background: Light yellow (#FFF9C4)
+- Text: "All actions executable?"
+- Sub-text: "navigate, detect, grasp, place, speak"
+- Size: 250x180px
+- Two exit arrows:
+  - YES → Continue down
+  - NO → Right to Error Handler
+
+**Node 5: Sequential Execution**
+- Shape: Rectangle with loop indicator
+- Background: Light green (#C5E1A5)
+- Text: "Execute Actions Sequentially"
+- Loop label: "For each action in plan"
+- Details:
+  - "Step 1: Navigate to table"
+  - "Step 2: Detect red cup"
+  - "Step 3: Grasp cup"
+- Size: 300x140px
+
+↓ (Arrow with label: "During execution")
+
+**Decision Diamond 3: Action Succeeded?**
+- Shape: Diamond
+- Background: Light orange (#FFCCBC)
+- Text: "Execution successful?"
+- Size: 250x130px
+- Two exit arrows:
+  - YES → Continue down or loop back to Node 5
+  - NO → Right to Error Handler
+
+**Decision Diamond 4: More Actions?**
+- Shape: Diamond
+- Background: Light yellow (#FFF9C4)
+- Text: "More actions in plan?"
+- Size: 250x120px
+- Two exit arrows:
+  - YES → Loop back to Node 5
+  - NO → Continue down
+
+**Node 6: Success**
+- Shape: Rounded rectangle (stadium)
+- Background: Light green (#A5D6A7)
+- Icon: Checkmark
+- Text: "Task Completed Successfully"
+- Size: 300x80px
+
+### Error Handler (right side branch)
+
+**Node E1: Error Detected**
+- Shape: Rectangle
+- Background: Light red (#FFCDD2)
+- Icon: Warning triangle
+- Text: "Error Handling"
+- Inputs from Diamonds 1, 2, 3
+- Size: 280x100px
+
+↓
+
+**Decision Diamond E2: Recoverable?**
+- Shape: Diamond
+- Background: Light orange (#FFCCBC)
+- Text: "Can retry or re-plan?"
+- Size: 240x120px
+
+**Node E3: Re-plan (if YES from E2)**
+- Shape: Rectangle
+- Background: Light yellow (#FFF59D)
+- Text: "LLM Re-planning"
+- Details:
+  - "Include error context"
+  - "Request alternative approach"
+- Arrow loops back to Node 3
+- Size: 280x100px
+
+**Node E4: Failure (if NO from E2)**
+- Shape: Rounded rectangle (stadium)
+- Background: Dark red (#EF9A9A)
+- Icon: X mark
+- Text: "Task Failed"
+- Details: "Report to user"
+- Size: 280x80px
+
+### Annotations (callout boxes)
+
+**Annotation 1** (next to Node 3):
+- Dashed line to LLM Processing
+- Text: "Deterministic planning for safety (temperature=0.0)"
+- Small box, light gray background
+
+**Annotation 2** (next to Node 5):
+- Dashed line to Sequential Execution
+- Text: "Publish progress to /execution_status topic"
+- Small box, light gray background
+
+**Annotation 3** (next to Error Handler):
+- Dashed line to Error Detected
+- Text: "Max 3 retry attempts before failure"
+- Small box, light gray background
+
+## Arrow Styles
+
+- Success path: Solid green arrows (3px)
+- Error path: Dashed red arrows (3px)
+- Loop back: Curved blue arrows (3px)
+- All arrows have labels in italic 10pt font
+
+## Legend (bottom right)
+
+- Small box with symbol explanations:
+  - Rounded rectangle: "Start/End"
+  - Rectangle: "Process"
+  - Hexagon: "External service (LLM)"
+  - Diamond: "Decision point"
+  - Dashed line: "Annotation"
+
+## Styling Guidelines
+
+- Font: Sans-serif (Arial or Roboto)
+- Title: 20pt, bold
+- Node labels: 14pt, bold
+- Node details: 10pt, normal
+- Arrow labels: 9pt, italic
+- All shapes have 2px borders (#424242 dark gray)
+- Drop shadows: 3px offset, 15% opacity
+- Border radius: 10px (rectangles), max radius (stadium shapes)
+- Consistent spacing: 60px vertical between nodes
+
+## Color Coding
+
+- Green tint: Success path
+- Blue tint: Data processing
+- Yellow tint: Decision points
+- Purple tint: External services (LLM)
+- Red/Orange tint: Errors and warnings
+- All colors use Material Design palette
+
+## Accessibility
+
+- High contrast text (WCAG AA)
+- Shape variety (not color-only differentiation)
+- Clear flow direction (top to bottom)
+- Alt text: "Cognitive planning flowchart showing task decomposition process: command input, LLM prompt construction, task decomposition, JSON validation, action validation, sequential execution with error handling and re-planning capability"
+
+## Example Values
+
+- Show concrete examples in each node
+- Command: "Pick up the red cup from the table"
+- Plan: [navigate(table), detect(red cup), grasp(cup)]
+- Makes the abstract flow concrete and relatable

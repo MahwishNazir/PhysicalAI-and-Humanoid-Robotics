@@ -1,0 +1,112 @@
+# Diagram Specification: VLA Architecture
+
+**Filename**: vla-architecture.png
+**Size**: 1200x800px
+**Format**: PNG
+**Purpose**: Show Vision-Language-Action paradigm components and data flow for Chapter 1
+
+## Content Layout
+
+### Title (top center)
+"Vision-Language-Action (VLA) Architecture"
+
+### Main Components (3 vertical columns with connecting arrows)
+
+**Left Column: Vision (Perception)**
+- Large box with camera icon
+- Background color: Light blue (#E3F2FD)
+- Label: "VISION"
+- Sub-components (stacked vertically):
+  - "RGB Camera" (with camera icon)
+  - "Depth Sensor" (with depth icon)
+  - "Object Detection" (YOLO/OpenCV)
+  - "Scene Understanding"
+- Output arrow labeled: "Visual Features"
+
+**Center Column: Language (Cognition)**
+- Large box with brain/LLM icon
+- Background color: Light green (#E8F5E9)
+- Label: "LANGUAGE"
+- Sub-components (stacked vertically):
+  - "Voice Input" (Whisper)
+  - "Natural Language Understanding" (LLM)
+  - "Task Planning" (GPT-4/Claude)
+  - "Semantic Reasoning"
+- Input arrows from Vision and User
+- Output arrow labeled: "Action Plans"
+
+**Right Column: Action (Physical Control)**
+- Large box with robot arm icon
+- Background color: Light orange (#FFF3E0)
+- Label: "ACTION"
+- Sub-components (stacked vertically):
+  - "Navigation" (Nav2)
+  - "Manipulation" (MoveIt2)
+  - "Gripper Control"
+  - "Motion Execution"
+- Output arrow labeled: "Robot Commands"
+
+### Data Flow Arrows
+
+**Vision → Language**
+- Arrow labeled: "Object locations, scene context"
+- Style: Solid blue arrow
+
+**User → Language**
+- Arrow from top labeled: "Voice/Text Commands"
+- Style: Dashed purple arrow
+
+**Language → Action**
+- Arrow labeled: "Executable action sequences"
+- Style: Solid green arrow
+
+**Action → Vision (Feedback)**
+- Arrow at bottom labeled: "Execution feedback, new observations"
+- Style: Dotted orange arrow (creates feedback loop)
+
+### Bottom Section: ROS 2 Integration Layer
+
+- Horizontal bar spanning full width
+- Background color: Light gray (#F5F5F5)
+- Label: "ROS 2 Middleware"
+- Icons: Topics, Services, Actions
+- Text: "Publishers/Subscribers, Service Clients, Action Clients"
+
+### Key Features Box (bottom right)
+
+- Small box with bullet points
+- Label: "Key Benefits"
+- Bullets:
+  - "Natural language control"
+  - "Multi-modal perception"
+  - "Adaptive task execution"
+  - "Closed-loop feedback"
+
+## Styling Guidelines
+
+- Font: Sans-serif (Arial or Roboto)
+- Title font size: 24pt, bold
+- Component labels: 16pt, bold
+- Sub-component labels: 12pt, normal
+- Arrow labels: 10pt, italic
+- Use consistent padding (20px) inside boxes
+- Round corners on all boxes (radius: 10px)
+- Drop shadows for depth (2px offset, 20% opacity)
+- Arrows: 3px width, arrowheads 10px
+
+## Color Palette
+
+- Vision: #E3F2FD (blue tint)
+- Language: #E8F5E9 (green tint)
+- Action: #FFF3E0 (orange tint)
+- ROS 2 Layer: #F5F5F5 (gray)
+- Arrows: Match source component color
+- Text: #212121 (dark gray)
+- Border: #BDBDBD (medium gray, 2px)
+
+## Accessibility
+
+- High contrast text (WCAG AA compliant)
+- Clear visual hierarchy
+- Labels readable at 800px width
+- Alt text: "VLA architecture showing three main components - Vision (perception), Language (cognition), and Action (control) - integrated through ROS 2 middleware with bidirectional data flow"
