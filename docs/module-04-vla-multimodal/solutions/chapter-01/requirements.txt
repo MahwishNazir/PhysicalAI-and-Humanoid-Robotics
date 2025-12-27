@@ -1,0 +1,13 @@
+# Chapter 1: LLM-Robotics Convergence - Python Dependencies
+
+# ROS 2 Python client library
+rclpy>=3.0.0
+
+# OpenAI API client for LLM integration
+openai>=1.0.0
+
+# Environment variable management (for API keys)
+python-dotenv>=1.0.0
+
+# Note: ROS 2 Humble must be installed separately
+# Installation: https://docs.ros.org/en/humble/Installation.html

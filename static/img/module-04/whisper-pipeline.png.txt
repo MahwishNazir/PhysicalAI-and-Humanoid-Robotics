@@ -1,0 +1,154 @@
+# Diagram Specification: Whisper Audio Processing Pipeline
+
+**Filename**: whisper-pipeline.png
+**Size**: 1400x600px
+**Format**: PNG
+**Purpose**: Show voice-to-action pipeline for Chapter 2 with Whisper integration
+
+## Content Layout
+
+### Title (top center)
+"Whisper Audio Processing Pipeline - Voice to Robot Action"
+
+### Pipeline Flow (left to right, 6 stages)
+
+**Stage 1: Audio Input**
+- Icon: Microphone
+- Label: "Audio Capture"
+- Background: Light blue (#E3F2FD)
+- Details box below:
+  - "Microphone Input"
+  - "16kHz sampling"
+  - "3-second chunks"
+  - "sounddevice library"
+
+**Stage 2: Preprocessing**
+- Icon: Waveform
+- Label: "Audio Preprocessing"
+- Background: Light cyan (#B2EBF2)
+- Details box below:
+  - "Noise Reduction"
+  - "Voice Activity Detection"
+  - "Format Conversion"
+  - "numpy array (float32)"
+
+**Stage 3: Whisper Model**
+- Icon: Neural network/brain
+- Label: "Whisper Transcription"
+- Background: Light green (#C8E6C9)
+- Details box below:
+  - "Model: base/medium/large"
+  - "Multilingual support"
+  - "Confidence scoring"
+  - "OpenAI Whisper"
+
+**Stage 4: Text Output**
+- Icon: Text document
+- Label: "Transcribed Text"
+- Background: Light yellow (#FFF9C4)
+- Details box below:
+  - "Natural language command"
+  - "\"Pick up the red cup\""
+  - "Confidence: 0.95"
+  - "String format"
+
+**Stage 5: ROS 2 Publishing**
+- Icon: Network/broadcast
+- Label: "ROS 2 Publisher"
+- Background: Light orange (#FFE0B2)
+- Details box below:
+  - "Topic: /voice_command"
+  - "Type: std_msgs/String"
+  - "Queue size: 10"
+  - "rclpy.publish()"
+
+**Stage 6: Robot Action**
+- Icon: Robot
+- Label: "Command Execution"
+- Background: Light red (#FFCDD2)
+- Details box below:
+  - "LLM Planning"
+  - "Navigation"
+  - "Manipulation"
+  - "Task completion"
+
+### Connecting Arrows
+
+- Between each stage: Solid arrow (4px width)
+- Arrow labels (centered above):
+  - Stage 1→2: "Raw Audio"
+  - Stage 2→3: "Clean Audio"
+  - Stage 3→4: "Transcription"
+  - Stage 4→5: "Text String"
+  - Stage 5→6: "ROS Message"
+
+### Error Handling Box (bottom, spans stages 2-4)
+
+- Dashed border rectangle
+- Background: Light pink (#FFEBEE)
+- Label: "Error Handling"
+- Contents:
+  - "Low confidence? → Request repeat"
+  - "Noisy audio? → Apply filtering"
+  - "Empty transcription? → Timeout and retry"
+
+### Performance Metrics Box (top right corner)
+
+- Small box with stats
+- Background: White with gray border
+- Label: "Performance"
+- Metrics:
+  - "Latency: ~500ms"
+  - "Accuracy: >90%"
+  - "Supported: English, 98 languages"
+  - "Model size: 74M-1550M params"
+
+### Code Example Box (bottom right)
+
+- Small code snippet box
+- Background: #F5F5F5 (code gray)
+- Font: Monospace
+- Code:
+```python
+# Whisper integration
+audio = sd.rec(duration)
+result = model.transcribe(audio)
+pub.publish(result['text'])
+```
+
+## Styling Guidelines
+
+- Font: Sans-serif (Arial or Roboto)
+- Title: 22pt, bold
+- Stage labels: 14pt, bold
+- Details: 10pt, normal
+- Code: 9pt, monospace
+- Icons: 48x48px
+- Box height: 120px (main stages)
+- Box width: 180px (main stages)
+- Arrow thickness: 4px
+- Spacing between stages: 40px
+- Padding: 15px inside boxes
+- Border radius: 8px
+
+## Color Progression
+
+- Gradient from cool (blue) to warm (red) left to right
+- Shows progression from input to output
+- Each stage slightly warmer than previous
+- Maintains readability with consistent text color
+
+## Accessibility
+
+- High contrast (WCAG AA)
+- Icons supplement text labels
+- Color-blind friendly palette
+- Alt text: "Whisper audio processing pipeline showing 6 stages: audio capture from microphone, preprocessing with noise reduction, Whisper model transcription, text output, ROS 2 publishing to voice_command topic, and final robot command execution"
+
+## Legend (bottom left)
+
+- Small box
+- Three items:
+  - Solid arrow: "Data flow"
+  - Dashed box: "Error handling"
+  - Colored boxes: "Processing stages"

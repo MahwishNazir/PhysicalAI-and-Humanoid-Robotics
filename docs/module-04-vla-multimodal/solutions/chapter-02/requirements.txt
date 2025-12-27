@@ -1,0 +1,20 @@
+# Chapter 2: Voice-to-Action with Whisper - Python Dependencies
+
+# ROS 2 Python client library
+rclpy>=3.0.0
+
+# OpenAI Whisper for speech recognition
+openai-whisper>=20230314
+
+# Audio capture and processing
+sounddevice>=0.4.6
+numpy>=1.21.0
+
+# Standard library extensions
+typing-extensions>=4.0.0
+
+# Note: ROS 2 Humble must be installed separately
+# Installation: https://docs.ros.org/en/humble/Installation.html
+
+# Note: For GPU acceleration, install PyTorch with CUDA support:
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118

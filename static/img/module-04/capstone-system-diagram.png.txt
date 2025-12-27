@@ -1,0 +1,261 @@
+# Diagram Specification: Capstone System Architecture
+
+**Filename**: capstone-system-diagram.png
+**Size**: 1600x1200px
+**Format**: PNG
+**Purpose**: Show complete autonomous humanoid system architecture for Chapter 4
+
+## Content Layout
+
+### Title (top center)
+"Autonomous Humanoid System - Complete Architecture"
+
+### Central Orchestrator (center, large)
+
+**Main Orchestrator Node**
+- Large hexagon (300x250px)
+- Background: Linear gradient (#9C27B0 to #7B1FA2) - purple
+- Icon: Control center / conductor icon
+- Label: "Main Orchestrator"
+- Sub-label: "State Machine Coordinator"
+- States listed inside:
+  - IDLE
+  - LISTENING
+  - PLANNING
+  - NAVIGATING
+  - DETECTING
+  - MANIPULATING
+  - COMPLETED
+  - ERROR
+- Border: 4px solid white
+
+### Surrounding Component Modules (6 nodes in circle around orchestrator)
+
+**1. Voice Interface (top left)**
+- Position: 11 o'clock
+- Shape: Rounded rectangle (250x180px)
+- Background: Light blue (#42A5F5)
+- Icon: Microphone
+- Label: "Voice Interface"
+- Details:
+  - "Whisper (base model)"
+  - "Audio capture (16kHz)"
+  - "Confidence scoring"
+- ROS Topics:
+  - OUT: /voice_command (String)
+  - OUT: /confidence (Float32)
+
+**2. LLM Planning (top right)**
+- Position: 1 o'clock
+- Shape: Rounded rectangle (250x180px)
+- Background: Light green (#66BB6A)
+- Icon: Brain / AI
+- Label: "LLM Planning Module"
+- Details:
+  - "GPT-4 integration"
+  - "Few-shot prompting"
+  - "JSON validation"
+- ROS Services:
+  - SRV: /plan_task
+
+**3. Navigation (right)**
+- Position: 3 o'clock
+- Shape: Rounded rectangle (250x180px)
+- Background: Light orange (#FFA726)
+- Icon: Map / compass
+- Label: "Navigation Controller"
+- Details:
+  - "Nav2 stack"
+  - "Semantic locations"
+  - "Obstacle avoidance"
+- ROS Actions:
+  - ACTION: NavigateToPose
+
+**4. Vision (bottom right)**
+- Position: 5 o'clock
+- Shape: Rounded rectangle (250x180px)
+- Background: Light purple (#AB47BC)
+- Icon: Camera / eye
+- Label: "Vision Module"
+- Details:
+  - "YOLO / OpenCV"
+  - "Color detection"
+  - "3D localization"
+- ROS Topics:
+  - IN: /camera/rgb/image_raw
+  - IN: /camera/depth/image_raw
+  - OUT: /detected_objects
+
+**5. Manipulation (bottom left)**
+- Position: 7 o'clock
+- Shape: Rounded rectangle (250x180px)
+- Background: Light red (#EF5350)
+- Icon: Robot arm / gripper
+- Label: "Manipulation Controller"
+- Details:
+  - "MoveIt2 integration"
+  - "Grasp planning"
+  - "Force control"
+- ROS Actions:
+  - ACTION: MoveGroup
+- ROS Topics:
+  - OUT: /gripper_state
+
+**6. User Interface (left)**
+- Position: 9 o'clock
+- Shape: Rounded rectangle (250x180px)
+- Background: Light cyan (#26C6DA)
+- Icon: Monitor / display
+- Label: "Status Monitor"
+- Details:
+  - "Real-time feedback"
+  - "Progress tracking"
+  - "Error reporting"
+- ROS Topics:
+  - IN: /system_status
+  - IN: /execution_feedback
+
+### Connecting Lines (Orchestrator to Components)
+
+**Bidirectional arrows** from orchestrator to each component:
+- Line style: Solid, 3px width
+- Color: Matches target component color
+- Arrowheads on both ends
+- Labels on arrows showing message types
+
+**Arrow Labels:**
+- To Voice: "Subscribe: voice_command"
+- To LLM: "Call: plan_task service"
+- To Navigation: "Send: NavigateToPose goal"
+- To Vision: "Request: object detection"
+- To Manipulation: "Send: MoveGroup goal"
+- To UI: "Publish: system_status"
+
+### Data Flow Example (bottom section)
+
+**Example Execution Trace** (horizontal timeline):
+- Background: Light gray (#F5F5F5)
+- Height: 150px
+- Shows sample command execution:
+
+Timeline boxes (left to right):
+1. "Voice: 'Pick up cup'" → Voice Interface (blue)
+2. "Plan: [nav, detect, grasp]" → LLM (green)
+3. "Navigate to table" → Navigation (orange)
+4. "Detect red cup" → Vision (purple)
+5. "Grasp cup" → Manipulation (red)
+6. "Task complete" → Status (cyan)
+
+Arrows connecting timeline boxes with timestamps:
+- t=0s, t=2s, t=12s, t=15s, t=20s, t=24s
+
+### ROS 2 Infrastructure Layer (bottom)
+
+**Horizontal bar spanning full width**
+- Height: 80px
+- Background: Dark gray (#424242)
+- Text color: White
+- Label: "ROS 2 Humble Infrastructure"
+- Icons showing:
+  - Topics (pub/sub icon)
+  - Services (request/response icon)
+  - Actions (goal/feedback/result icon)
+  - Parameters (settings icon)
+
+### System Metrics Box (top right corner)
+
+- Small box (200x150px)
+- Background: White, border: 2px gray
+- Label: "Performance Metrics"
+- Metrics:
+  - "Avg latency: 3-5s"
+  - "Success rate: 70-85%"
+  - "Components: 6 nodes"
+  - "Topics: 8"
+  - "Actions: 2"
+  - "Services: 1"
+
+### Legend (top left corner)
+
+- Small box (180x120px)
+- Background: White, border: 2px gray
+- Label: "Legend"
+- Items:
+  - Hexagon: "Orchestrator"
+  - Rectangle: "Component node"
+  - Bidirectional arrow: "ROS communication"
+  - Timeline: "Example execution"
+
+## Component Communication Details
+
+**For each connecting line, show protocol:**
+- Dashed callout boxes near arrows
+- Small font (8pt)
+- Examples:
+  - "QoS: Reliable"
+  - "Rate: 1Hz"
+  - "Buffer: 10"
+
+## Styling Guidelines
+
+- Font: Sans-serif (Roboto or Arial)
+- Title: 24pt, bold
+- Component labels: 16pt, bold
+- Component details: 11pt, normal
+- ROS interface text: 9pt, monospace
+- Arrow labels: 9pt, italic
+- Orchestrator text: 14pt, bold (white)
+- Timeline labels: 10pt, normal
+- Drop shadows on all components: 4px offset, 20% opacity
+- Border radius: 12px (components), max (orchestrator)
+- Padding: 15px inside boxes
+
+## Color Palette
+
+- Orchestrator: Purple gradient (#9C27B0 to #7B1FA2)
+- Voice: Blue (#42A5F5)
+- Planning: Green (#66BB6A)
+- Navigation: Orange (#FFA726)
+- Vision: Purple (#AB47BC)
+- Manipulation: Red (#EF5350)
+- UI: Cyan (#26C6DA)
+- ROS Layer: Dark gray (#424242)
+- Timeline: Light gray (#F5F5F5)
+- All text: Dark gray (#212121) except on dark backgrounds (white)
+
+## Icons
+
+- Use simple, recognizable icons (64x64px)
+- Material Design icon set
+- White icons on colored backgrounds
+- Consistent style across all icons
+
+## Visual Hierarchy
+
+1. Orchestrator is largest and central (primary focus)
+2. Components are equal size (secondary focus)
+3. ROS layer provides context (tertiary)
+4. Timeline shows practical example (tertiary)
+5. Metrics and legend provide reference (minimal)
+
+## Accessibility
+
+- High contrast (WCAG AA compliant)
+- Color is not the only differentiator (shapes, labels, icons)
+- Clear visual flow from center outward
+- Alt text: "Capstone autonomous humanoid system architecture showing central orchestrator coordinating six components: voice interface with Whisper, LLM planning with GPT-4, navigation with Nav2, vision with YOLO, manipulation with MoveIt2, and status monitoring UI. All components communicate via ROS 2 topics, services, and actions. Example execution timeline shows voice command 'pick up cup' flowing through planning, navigation, detection, and manipulation phases."
+
+## Layout Grid
+
+- Use radial layout with orchestrator at center
+- Components evenly spaced at 60° intervals
+- Maintain consistent spacing (100px) from center to components
+- Timeline and ROS layer anchored to bottom
+- Metrics and legend anchored to top corners
+
+## Print Considerations
+
+- Ensure readability when printed at A4 size
+- Minimum font size: 9pt
+- Sufficient contrast for black & white printing
+- Critical info uses both color and pattern/shape
